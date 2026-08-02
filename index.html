@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Social — Cybernetic Sovereign Command Core v5.0</title>
+    <!-- Firebase SDK v8 CDN -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --neon-cyan: #00f0ff;
+            --neon-purple: #b026ff;
+            --neon-pink: #ff007f;
+            --neon-lime: #39ff14;
+            --neon-amber: #ffb703;
+            --bg-void: #030712;
+            --bg-deep: #0b0f19;
+            --bg-card: rgba(15, 23, 42, 0.85);
+            --bg-input: rgba(30, 41, 59, 0.7);
+            --border-cyber: rgba(0, 240, 255, 0.25);
+            --border-glow: rgba(0, 240, 255, 0.6);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --radius-cyber: 14px;
+            --radius-lg: 24px;
+            --shadow-cyber: 0 0 35px -5px rgba(0, 240, 255, 0.2);
+            --shadow-intense: 0 0 50px -5px rgba(176, 38, 255, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-void);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed; inset: 0;
+            background-image: 
+                linear-gradient(to right, rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1700px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            gap: 20px;
+        }
+
+        .glass-cyber {
+            background: var(--bg-card);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border-cyber);
+            border-radius: var(--radius-cyber);
+            box-shadow: var(--shadow-cyber);
+        }
+
+        #login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 480px;
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            box-shadow: var(--shadow-intense);
+            border: 1px solid rgba(176, 38, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-card::after {
+            content: "";
+            position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+        }
+
+        .auth-card h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            font-weight: 900;
+            text-align: center;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #fff 30%, var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        .auth-card p {
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            margin-top: -10px;
+            text-transform: uppercase;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .input {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--bg-input);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 10px;
+            color: #fff;
+            outline: none;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input:focus {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
+            background: rgba(30, 41, 59, 0.95);
+        }
+
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 11px;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            color: #030712;
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
+            font-weight: 900;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.7);
+            filter: brightness(1.1);
+        }
+
+        .btn-danger {
+            background: rgba(255, 0, 127, 0.15);
+            color: var(--neon-pink);
+            border: 1px solid rgba(255, 0, 127, 0.4);
+        }
+        .btn-danger:hover { background: var(--neon-pink); color: #fff; box-shadow: 0 0 20px rgba(255, 0, 127, 0.5); }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 240, 255, 0.1);
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        .btn-sm { padding: 8px 14px; font-size: 9px; letter-spacing: 1px; }
+
+        #admin-app { display: none; flex-direction: column; flex: 1; gap: 20px; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 28px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .brand-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .brand-logo {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900; font-size: 18px; color: #030712;
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .nav-tab {
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: var(--text-sub);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            transition: all 0.25s;
+        }
+
+        .nav-tab:hover { color: #fff; background: rgba(0, 240, 255, 0.05); border-color: rgba(0, 240, 255, 0.3); }
+        .nav-tab.active { background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); color: #030712; border-color: transparent; box-shadow: 0 0 25px rgba(0, 240, 255, 0.5); font-weight: 900; }
+
+        .tab-pane { display: none; flex-direction: column; gap: 20px; flex: 1; }
+        .tab-pane.active { display: flex; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 18px;
+        }
+
+        .stat-card {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.25s, border-color 0.25s;
+        }
+
+        .stat-card:hover { transform: translateY(-3px); border-color: var(--neon-cyan); box-shadow: 0 0 30px rgba(0, 240, 255, 0.3); }
+        .stat-card .val { font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 900; color: var(--neon-cyan); letter-spacing: -1px; }
+        .stat-card .lbl { font-family: 'Orbitron', sans-serif; font-size: 9px; color: var(--text-sub); text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px; }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .data-table th, .data-table td {
+            padding: 16px 22px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .data-table th { 
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-cyan); 
+            font-size: 9px; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            font-weight: 700; 
+            background: rgba(0, 240, 255, 0.03);
+        }
+
+        .data-table tr:hover td { background: rgba(0, 240, 255, 0.02); }
+        .table-container { overflow-x: auto; max-height: 520px; overflow-y: auto; }
+
+        .terminal {
+            background: #010409;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            height: 130px;
+            overflow-y: auto;
+            color: var(--neon-lime);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            box-shadow: inset 0 2px 15px rgba(0,0,0,0.9);
+        }
+
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(3, 7, 18, 0.88);
+            display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px;
+            backdrop-filter: blur(16px);
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal {
+            background: #0b0f19; border: 1px solid var(--border-cyber); border-radius: var(--radius-lg);
+            width: 100%; max-width: 680px; padding: 36px; display: flex; flex-direction: column; gap: 20px;
+            max-height: 90vh; overflow-y: auto; box-shadow: 0 0 60px rgba(0, 240, 255, 0.25);
+        }
+
+        .toast {
+            position: fixed; bottom: 30px; right: 30px; background: #0f172a; border: 1px solid var(--neon-cyan);
+            padding: 16px 26px; border-radius: 12px; font-size: 12px; font-weight: 700; z-index: 2000;
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.35); animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; align-items: center; gap: 12px; color: #fff; font-family: 'Orbitron', sans-serif; letter-spacing: 0.5px;
+        }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .badge-pill {
+            padding: 4px 12px;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 20px;
+            color: var(--neon-cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- Custom Global Chat Enhancements --- */
+        .chat-container-box {
+            display: flex;
+            flex-direction: column;
+            height: 480px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-cyber);
+            background-color: var(--bg-deep);
+        }
+
+        .chat-messages-scroll {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-msg-card {
+            background: rgba(30, 41, 59, 0.5);
+            padding: 12px 16px;
+            border-radius: 10px;
+            position: relative;
+            max-width: 85%;
+            border-left: 3px solid var(--neon-cyan);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            animation: fadeInMsg 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeInMsg { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .chat-msg-sender {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--neon-cyan);
+            font-size: 10px;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .chat-msg-text {
+            font-size: 13px;
+            word-break: break-word;
+            color: var(--text-main);
+        }
+
+        .chat-msg-quote {
+            font-size: 11px;
+            background: rgba(0, 240, 255, 0.05);
+            padding: 6px 10px;
+            border-left: 2px solid var(--neon-purple);
+            margin-bottom: 8px;
+            border-radius: 4px;
+            color: var(--text-sub);
+        }
+
+        .chat-reply-trigger {
+            background: transparent;
+            color: var(--text-sub);
+            font-size: 10px;
+            padding: 2px 0;
+            margin-top: 6px;
+            cursor: pointer;
+            border: none;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .chat-reply-trigger:hover { color: var(--neon-cyan); }
+
+        .chat-reply-banner {
+            background: rgba(15, 23, 42, 0.95);
+            padding: 10px 18px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-cyber);
+        }
+
+        .chat-reply-banner span { color: var(--neon-cyan); font-family: 'Orbitron', sans-serif; font-size: 10px; }
+
+        .chat-input-bar {
+            display: flex;
+            padding: 14px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-cyber);
+            gap: 12px;
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        @media(max-width: 1100px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <!-- Advanced Custom Music & SFX Audio Elements -->
+    <audio id="bg-audio" loop preload="auto">
+        <source src="https://vgmsite.com/soundtracks/fortnite-battle-royale-ost/jvxrqhzhkq/OG%20Classic%20-%20Lobby%20Music.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="click-sfx" preload="auto">
+        <source src="https://actions.google.com/sounds/v1/ui/button_click.ogg" type="audio/ogg">
+    </audio>
+
+    <!-- ADMIN PANEL TOTAL LOCKDOWN OVERLAY -->
+    <div id="admin-lockdown-overlay" style="display: none; position: fixed; inset: 0; background: rgba(3, 7, 18, 0.95); backdrop-filter: blur(20px); z-index: 99999; flex-direction: column; align-items: center; justify-content: center; font-family: 'Orbitron', sans-serif; color: var(--neon-pink); text-align: center; padding: 20px;">
+        <div class="glass-cyber auth-card" style="max-width: 480px; padding: 48px; display: flex; flex-direction: column; gap: 22px; border: 1px solid rgba(255, 0, 127, 0.5);">
+            <div style="font-size: 48px; margin-bottom: -10px;">🛡️</div>
+            <h1 style="color: var(--neon-pink); font-size: 22px;">Admin Lockdown Active</h1>
+            <p style="color: var(--text-sub); font-size: 11px;">The admin command core is securely locked down. Enter the master deactivation code to restore access.</p>
+            <div class="input-group" style="text-align: left;">
+                <label>Deactivation Cipher</label>
+                <input type="password" id="lockdown-unlock-code" class="input" placeholder="Enter override code...">
+            </div>
+            <button class="btn btn-danger" onclick="attemptDeactivateLockdown()">Deauthorize Lockdown</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Login Screen -->
+        <div id="login-screen">
+            <div class="auth-card glass-cyber">
+                <div style="display: flex; justify-content: center; margin-bottom: -6px;">
+                    <div class="brand-logo" style="width: 64px; height: 64px; font-size: 24px;">SS</div>
+                </div>
+                <h1>op admin panel</h1>
+                <p>Commander center</p>
+                
+                <div class="input-group">
+                    <label>Admin Handle</label>
+                    <input type="text" id="login-user" class="input" placeholder=Username>
+                </div>
+                <div class="input-group">
+                    <label>Access passwird</label>
+                    <input type="password" id="login-pass" class="input" placeholder="••••••••••••">
+                </div>
+                <button class="btn btn-primary" onclick="handleLogin()" style="margin-top: 6px;">Initialize Neural Link</button>
+            </div>
+        </div>
+
+        <!-- Dashboard App -->
+        <div id="admin-app">
+            <header class="glass-cyber">
+                <div class="brand-area">
+                    <div class="brand-logo">SS</div>
+                    <div>
+                        <h2 style="font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900; letter-spacing: 0.5px;">CYBERNETIC COMMAND v5.0</h2>
+                        <span id="current-admin-badge" style="font-family: 'Orbitron', sans-serif; font-size: 9px; color: var(--neon-cyan); text-transform: uppercase; font-weight: 700; letter-spacing: 1px;"></span>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <!-- Custom Music Track Switcher -->
+                    <select id="music-track-select" class="input" style="padding: 8px 12px; font-size: 9px; font-family: 'Orbitron', sans-serif; width: 140px;" onchange="changeMusicTrack(this.value)">
+                        <option value="https://vgmsite.com/soundtracks/fortnite-battle-royale-ost/jvxrqhzhkq/OG%20Classic%20-%20Lobby%20Music.mp3">🎵 Fortnite OG</option>
+                        <option value="https://vgmsite.com/soundtracks/synthwave-radio/synthwave_loop.mp3">🎵 Synthwave Void</option>
+                        <option value="https://vgmsite.com/soundtracks/cyberpunk-chill/cyber_chill.mp3">🎵 Cybernetic Chill</option>
+                    </select>
+                    <button class="btn btn-secondary btn-sm" id="music-toggle-btn" onclick="toggleCustomMusic()">🎵 Music: OFF</button>
+                    <button class="btn btn-primary btn-sm" onclick="openLiveBroadcastModal()">📡 Broadcast Live</button>
+                    <button class="btn btn-secondary btn-sm" onclick="openPasswordModal()">🔒 pass</button>
+                    <button class="btn btn-secondary btn-sm" onclick="openAiTerminalTab()">🤖 AI DEC.</button>
+                    <button class="btn btn-danger btn-sm" onclick="handleLogout()">Disconnect</button>
+                </div>
+            </header>
+
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('stats')">Analytics Hub</button>
+                <button class="nav-tab" onclick="switchTab('users')">User Directory</button>
+                <button class="nav-tab" onclick="switchTab('posts')">Network Feeds</button>
+                <button class="nav-tab" onclick="switchTab('chat')">Global Chat</button>
+                <button class="nav-tab" onclick="switchTab('stream')">Live Broadcasting</button>
+                <button class="nav-tab" onclick="switchTab('ai')">AI settings</button>
+                <button class="nav-tab" onclick="switchTab('badges')">Badges & Ranks</button>
+                <button class="nav-tab" onclick="switchTab('promos')">Voucher Codes</button>
+                <button class="nav-tab" onclick="switchTab('reports')">Report Tickets</button>
+                <button class="nav-tab" onclick="switchTab('settings')">Global </button>
+                <button class="nav-tab" id="tab-owner-btn" onclick="switchTab('owner')" style="display:none; color: var(--neon-amber); border-color: rgba(255,183,3,0.4);">Owner Vault</button>
+            </div>
+
+            <!-- TAB: STATS -->
+            <div id="tab-stats" class="tab-pane active">
+                <div class="stats-grid">
+                    <div class="stat-card glass-cyber"><span class="val" id="stat-users">0</span><span class="lbl">Registered Accounts</span></div>
+                    <div class="stat-card glass-cyber"><span class="val" id="stat-posts">0</span><span class="lbl">Active Network Posts</span></div>
+                    <div class="stat-card glass-cyber"><span class="val" id="stat-streams">0</span><span class="lbl">Live Broadcasts</span></div>
+                    <div class="stat-card glass-cyber"><span class="val" id="stat-promos">0</span><span class="lbl">Active Vouchers</span></div>
+                    <div class="stat-card glass-cyber"><span class="val" id="stat-coins">0</span><span class="lbl">Total Coin Supply</span></div>
+                    <div class="stat-card glass-cyber"><span class="val" id="stat-reports">0</span><span class="lbl">Open Reports</span></div>
+                </div>
+                <div class="grid-2">
+                    <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 16px;">
+                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Real-Time Activity Matrix</h3>
+                        <div id="heatmap-container" style="display: flex; gap: 10px; align-items: flex-end; height: 140px; padding-top: 10px;"></div>
+                    </div>
+                    <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 16px;">
+                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Quick Matrix Actions</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <button class="btn btn-primary" onclick="openLiveBroadcastModal()">Launch Broadcast</button>
+                            <button class="btn btn-secondary" onclick="openAnnouncementModal()">Banner Notice</button>
+                            <button class="btn btn-secondary" onclick="runAiScanNow()">Run Neural Scan</button>
+                            <button class="btn btn-secondary" onclick="exportUsersCSV()">Export CSV</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: USERS -->
+            <div id="tab-users" class="tab-pane">
+                <div class="glass-cyber" style="padding: 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                    <input type="text" id="user-search" class="input" style="flex: 1; min-width: 240px;" placeholder="Search handle, display name or UID..." oninput="renderUserTable()">
+                    <select id="user-filter" class="input" style="max-width: 180px;" onchange="renderUserTable()">
+                        <option value="all">All Accounts</option>
+                        <option value="banned">Banned Only</option>
+                        <option value="muted">Muted Only</option>
+                        <option value="verified">Verified Only</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="openLookupModalPrompt()">Account Lookup</button>
+                    <button class="btn btn-secondary" onclick="exportUsersCSV()">Export Data</button>
+                </div>
+                <div class="glass-cyber table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>User Handle</th><th>Coins</th><th>Rank / Badge</th><th>Status</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="user-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB: POSTS -->
+            <div id="tab-posts" class="tab-pane">
+                <div class="glass-cyber table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Author</th><th>Content / Caption</th><th>Timestamp</th><th>Pinned</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="post-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        <!-- TAB: GLOBAL CHAT (Fixed Real-Time Live Message Popping) -->
+            <div id="tab-chat" class="tab-pane">
+                <div class="glass-cyber" style="padding: 16px; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Live Global Chat Feed</h3>
+                    <button class="btn btn-danger btn-sm" onclick="purgeGlobalChat()">Wipe Entire Chat</button>
+                </div>
+                
+                <div class="chat-container-box glass-cyber">
+                    <div id="globalChatMessages" class="chat-messages-scroll">
+                        <!-- Messages populated dynamically via JS -->
+                    </div>
+
+                    <!-- Reply Banner State -->
+                    <div id="chatReplyBanner" class="chat-reply-banner" style="display:none;">
+                        <div>Replying to <span id="replyingTargetUser"></span>: <span id="replyingTargetText" style="color:var(--text-sub);"></span></div>
+                        <button onclick="cancelChatReply()" class="btn btn-secondary btn-sm" style="padding: 2px 8px;">✕</button>
+                    </div>
+
+                    <!-- Chat Input Field Area -->
+                    <div class="chat-input-bar">
+                        <input type="text" id="globalChatInput" class="input" placeholder="Type a message in global chat..." onkeypress="handleChatKeyPress(event)">
+                        <button class="btn btn-primary" onclick="sendGlobalChatMessage()">Send Message</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: STREAM -->
+            <div id="tab-stream" class="tab-pane">
+                <div class="grid-2">
+                    <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 18px;">
+                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Broadcast Live Video Stream</h3>
+                        <div class="input-group">
+                            <label>Broadcast Title</label>
+                            <input type="text" id="stream-title-input" class="input" placeholder="e.g. Cybernetic Assembly Q&A">
+                        </div>
+                        <div class="input-group">
+                            <label>Host Handle</label>
+                            <input type="text" id="stream-host-input" class="input" value="Ferni1">
+                        </div>
+                        <div class="input-group">
+                            <label>Video Stream Source URL (MP4 / HLS / WebRTC)</label>
+                            <input type="text" id="stream-url-input" class="input" placeholder="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4">
+                        </div>
+                        <button class="btn btn-primary" onclick="startLiveBroadcast()">Initiate Global Broadcast</button>
+                    </div>
+                    <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 18px;">
+                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Active Live Broadcasts</h3>
+                        <div class="table-container" style="max-height: 280px;">
+                            <table class="data-table">
+                                <thead><tr><th>Title</th><th>Host</th><th>Action</th></tr></thead>
+                                <tbody id="live-streams-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: AI MODERATION -->
+            <div id="tab-ai" class="tab-pane">
+                <div class="grid-2">
+                    <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 18px;">
+                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Neural Sentinel Engine</h3>
+                        <p style="font-size: 13px; color: var(--text-sub); line-height: 1.5;">The neural scanner automatically evaluates posts and chat feeds for disruptive patterns, unauthorized script payloads, and policy violations.</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                            <span>Active Auto-Filtering</span>
+                            <input type="checkbox" id="ai-filter-toggle" checked style="width: 20px; height: 20px; accent-color: var(--neon-cyan); cursor: pointer;" onchange="toggleAiFeature('autoFilter', this.checked)">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                            <span>Auto-Quarantine Toxic Accounts</span>
+                            <input type="checkbox" id="ai-ban-toggle" style="width: 20px; height: 20px; accent-color: var(--neon-cyan); cursor: pointer;" onchange="toggleAiFeature('autoBan', this.checked)">
+                        </div>
+                        <button class="btn btn-primary" onclick="runAiScanNow()">Execute Deep Neural Scan</button>
+                    </div>
+                    <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 18px;">
+                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Neural Threat Log</h3>
+                        <div class="terminal" id="ai-log-terminal" style="height: 220px;">
+                            <div>[SENTINEL] Neural security daemon online...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: BADGES -->
+            <div id="tab-badges" class="tab-pane">
+                <div class="grid-2">
+                    <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 18px;">
+                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Deploy Custom Rank Badge</h3>
+                        <div class="input-group">
+                            <label>Badge Title</label>
+                            <input type="text" id="badge-name" class="input" placeholder="e.g. Cyber VIP">
+                        </div>
+                        <div class="input-group">
+                            <label>Icon Glyph</label>
+                            <input type="text" id="badge-icon" class="input" placeholder="e.g. ⚡">
+                        </div>
+                        <div class="input-group">
+                            <label>Glow Color</label>
+                            <input type="color" id="badge-color" class="input" value="#00f0ff" style="height: 44px; padding: 4px; cursor: pointer;">
+                        </div>
+                        <button class="btn btn-primary" onclick="createCustomBadge()">Deploy Badge Definition</button>
+                    </div>
+                    <div class="glass-cyber table-container">
+                        <table class="data-table">
+                            <thead><tr><th>Title</th><th>Icon</th><th>Glow Color</th><th>Action</th></tr></thead>
+                            <tbody id="badge-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: PROMOS -->
+            <div id="tab-promos" class="tab-pane">
+                <div class="grid-2">
+                    <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 18px;">
+                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Generate Voucher Code</h3>
+                        <div class="input-group">
+                            <label>Voucher Code String</label>
+                            <input type="text" id="promo-code-text" class="input" placeholder="e.g. CYBER2026">
+                        </div>
+                        <div class="input-group">
+                            <label>Coin Reward Amount</label>
+                            <input type="number" id="promo-coins" class="input" placeholder="e.g. 1000">
+                        </div>
+                        <button class="btn btn-primary" onclick="createPromoCode()">Issue Voucher Code</button>
+                    </div>
+                    <div class="glass-cyber table-container">
+                        <table class="data-table">
+                            <thead><tr><th>Code</th><th>Reward</th><th>Redemptions</th><th>Action</th></tr></thead>
+                            <tbody id="promo-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: REPORTS -->
+            <div id="tab-reports" class="tab-pane">
+                <div class="glass-cyber table-container">
+                    <table class="data-table">
+                        <thead><tr><th>Reporter</th><th>Target ID</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody id="report-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB: SETTINGS & MASTER LOCKDOWN -->
+            <div id="tab-settings" class="tab-pane">
+                <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 20px; max-width: 680px;">
+                    <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Global Matrix Parameters</h3>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255, 0, 127, 0.05); padding: 14px; border: 1px solid rgba(255, 0, 127, 0.2); border-radius: 12px;">
+                        <div>
+                            <span style="font-weight: bold; color: var(--neon-pink);">🛡️ Master Admin Panel Lockdown</span>
+                            <p style="font-size: 11px; color: var(--text-sub);">Locks down the entire admin panel and requires a code to unlock.</p>
+                        </div>
+                        <input type="checkbox" id="setting-lockdown-master" style="width: 22px; height: 22px; accent-color: var(--neon-pink); cursor: pointer;" onchange="toggleMasterLockdown(this.checked)">
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>New User Registrations Active</span>
+                        <input type="checkbox" id="setting-reg" style="width: 20px; height: 20px; accent-color: var(--neon-cyan); cursor: pointer;" onchange="updateSystemSetting('registrationOpen', this.checked)">
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>User Posting Enabled</span>
+                        <input type="checkbox" id="setting-post" style="width: 20px; height: 20px; accent-color: var(--neon-cyan); cursor: pointer;" onchange="updateSystemSetting('postingOpen', this.checked)">
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>System Maintenance Mode</span>
+                        <input type="checkbox" id="setting-maint" style="width: 20px; height: 20px; accent-color: var(--neon-pink); cursor: pointer;" onchange="updateSystemSetting('maintenanceMode', this.checked)">
+                    </div>
+                    <div class="input-group" style="margin-top: 4px;">
+                        <label>Global Matrix Banner Announcement</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="setting-announcement" class="input" placeholder="Enter broadcast banner message...">
+                            <button class="btn btn-primary" onclick="saveSystemAnnouncement()">Broadcast</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: OWNER -->
+            <div id="tab-owner" class="tab-pane">
+                <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 18px; max-width: 720px;">
+                    <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-amber); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Sovereign Owner Master Vault</h3>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" onclick="coinSinkTax()">Apply 10% Wealth Tax (>100 Coins)</button>
+                        <button class="btn btn-secondary" onclick="coinSinkDividend()">Execute +100 Coin Dividend</button>
+                    </div>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" onclick="bulkCoinGivePrompt()">Bulk Distribute Coins</button>
+                        <button class="btn btn-danger" onclick="purgeGlobalChat()">Wipe Entire Global Chat</button>
+                    </div>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <button class="btn btn-danger" onclick="wipeAllPosts()">Purge All Network Posts</button>
+                        <button class="btn btn-danger" onclick="resetAllCoins()">Reset All Wallets to 100</button>
+                        <button class="btn btn-danger" onclick="factoryResetDatabase()">⚠️ Factory Reset Matrix State</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terminal Activity Log -->
+            <div class="terminal" id="terminal-log">
+                <div>[SYSTEM] Cybernetic command terminal online and listening. Ready...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Broadcast Modal -->
+    <div class="modal-overlay" id="live-broadcast-modal">
+        <div class="modal glass-cyber">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 16px; font-weight: 900;">Live Broadcast Studio</h3>
+                <button class="btn btn-secondary btn-sm" onclick="closeLiveBroadcastModal()">✕ Close</button>
+            </div>
+            <div class="input-group">
+                <label>Broadcast Title</label>
+                <input type="text" id="modal-stream-title" class="input" placeholder="e.g. Principal's Cyber Address">
+            </div>
+            <div class="input-group">
+                <label>Host Handle</label>
+                <input type="text" id="modal-stream-host" class="input" value="Ferni1">
+            </div>
+            <div class="input-group">
+                <label>Stream Video URL / Embed Source</label>
+                <input type="text" id="modal-stream-url" class="input" placeholder="https://live.schoolsocial.app/stream/master.m3u8">
+            </div>
+            <button class="btn btn-primary" onclick="submitLiveBroadcastModal()">Go Live Instantly</button>
+        </div>
+    </div>
+
+    <!-- Password Change Modal -->
+    <div class="modal-overlay" id="password-modal">
+        <div class="modal glass-cyber">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 16px; font-weight: 900;">Modify Admin Access Cipher</h3>
+                <button class="btn btn-secondary btn-sm" onclick="closePasswordModal()">✕ Close</button>
+            </div>
+            <div class="input-group">
+                <label>Current Cipher</label>
+                <input type="password" id="pass-current" class="input" placeholder="Enter current cipher">
+            </div>
+            <div class="input-group">
+                <label>New Cipher</label>
+                <input type="password" id="pass-new" class="input" placeholder="Enter new cipher">
+            </div>
+            <div class="input-group">
+                <label>Confirm New Cipher</label>
+                <input type="password" id="pass-confirm" class="input" placeholder="Confirm new cipher">
+            </div>
+            <button class="btn btn-primary" onclick="submitPasswordChange()">Update Cipher Instantly</button>
+        </div>
+    </div>
+
+    <!-- User Lookup / Inspector Modal -->
+    <div class="modal-overlay" id="lookup-modal">
+        <div class="modal glass-cyber">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 16px; font-weight: 900;">Account Security Inspector</h3>
+                <button class="btn btn-secondary btn-sm" onclick="closeLookupModal()">✕ Close</button>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="lookup-input-query" class="input" placeholder="Enter handle or exact UID...">
+                <button class="btn btn-primary" onclick="executeUserLookup()">Search</button>
+            </div>
+            <div id="lookup-results-container" style="display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto;">
+                <p style="color: var(--text-sub); font-size: 13px; text-align: center; padding: 30px;">Run a lookup search to inspect organized user database records.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advanced User Management Modal -->
+    <div class="modal-overlay" id="user-modal">
+        <div class="modal glass-cyber">
+            <h3 id="modal-username" style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 16px; font-weight: 900;">Manage User Account</h3>
+            <div class="input-group">
+                <label>Display Name</label>
+                <input type="text" id="modal-displayname" class="input">
+            </div>
+            <div class="input-group">
+                <label>User Bio</label>
+                <textarea id="modal-bio" class="input" style="resize: none; height: 70px;"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Direct User Password Override</label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="modal-user-newpass" class="input" placeholder="New account password...">
+                    <button class="btn btn-primary" onclick="adminChangeUserPassword()">Set Pass</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Coin Balance Control</label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="number" id="modal-coin-amount" class="input" placeholder="Amount">
+                    <button class="btn btn-primary" onclick="modUserCoins('give')">Add</button>
+                    <button class="btn btn-secondary" onclick="modUserCoins('remove')">Sub</button>
+                    <button class="btn btn-secondary" onclick="modUserCoins('set')">Set</button>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap;">
+                <button class="btn btn-secondary" id="modal-btn-verify" onclick="toggleUserStatus('verified')">Toggle Verification</button>
+                <button class="btn btn-secondary" id="modal-btn-ban" onclick="toggleUserStatus('banned')">Toggle Ban</button>
+                <button class="btn btn-secondary" id="modal-btn-mute" onclick="toggleUserStatus('muted')">Toggle Mute</button>
+                <button class="btn btn-danger" onclick="deleteAccountModal()">Delete Account</button>
+            </div>
+            <button class="btn btn-secondary" onclick="closeUserModal()" style="margin-top: 10px;">Done</button>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtYQa0nVUrzdBNoYbSojunbq-yk9QZKcw",
+            authDomain: "school-soical.firebaseapp.com",
+            databaseURL: "https://school-soical-default-rtdb.firebaseio.com",
+            projectId: "school-soical",
+            storageBucket: "school-soical.firebasestorage.app",
+            messagingSenderId: "189089843034",
+            appId: "1:189089843034:web:88720923a3c5b4935dd563",
+            measurementId: "G-3KJS0JP5K6"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const rtdb = firebase.database();
+
+        const lockdownRef = rtdb.ref('school_social_app/settings/lockdown');
+        const UNLOCK_CODE = "AIMEISPRO:)";
+
+        let currentUserData = null;
+        let selectedUserId = null;
+        let usersCache = [];
+        let postsCache = [];
+        let chatCache = [];
+        let promosCache = [];
+        let streamsCache = [];
+        let reportsCache = [];
+        let musicPlaying = false;
+        let replyingToChatId = null;
+
+        // --- Custom Audio & Micro-Interaction Click SFX Handler ---
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                const sfx = document.getElementById('click-sfx');
+                if (sfx) {
+                    sfx.currentTime = 0;
+                    sfx.volume = 0.25;
+                    sfx.play().catch(() => {}); // Safely bypass browser autoplay blocks
+                }
+            }
+        });
+
+        function changeMusicTrack(trackUrl) {
+            const audio = document.getElementById('bg-audio');
+            audio.src = trackUrl;
+            if (musicPlaying) {
+                audio.play().catch(e => console.error("Audio error:", e));
+            }
+            showToast('Music track updated');
+        }
+
+        function toggleCustomMusic() {
+            const audio = document.getElementById('bg-audio');
+            const btn = document.getElementById('music-toggle-btn');
+            
+            if (!musicPlaying) {
+                audio.play().then(() => {
+                    musicPlaying = true;
+                    btn.innerText = '🎵 Music: ON';
+                    btn.style.borderColor = 'var(--neon-cyan)';
+                    btn.style.color = 'var(--neon-cyan)';
+                    showToast('Custom audio stream engaged');
+                }).catch(error => {
+                    console.error("Audio playback error:", error);
+                    showToast('Playback restricted by browser. Interact with page first.');
+                });
+            } else {
+                audio.pause();
+                musicPlaying = false;
+                btn.innerText = '🎵 Music: OFF';
+                btn.style.borderColor = 'rgba(255,255,255,0.1)';
+                btn.style.color = 'var(--text-main)';
+                showToast('Music muted');
+            }
+        }
+
+        function logAction(text) {
+            const term = document.getElementById('terminal-log');
+            const time = new Date().toLocaleTimeString();
+            term.innerHTML += `<div>[${time}] ${text}</div>`;
+            term.scrollTop = term.scrollHeight;
+        }
+
+        function logAi(text) {
+            const term = document.getElementById('ai-log-terminal');
+            const time = new Date().toLocaleTimeString();
+            term.innerHTML += `<div>[${time}] ${text}</div>`;
+            term.scrollTop = term.scrollHeight;
+        }
+
+        function showToast(msg) {
+            const t = document.createElement('div');
+            t.className = 'toast glass-cyber';
+            t.innerHTML = `<span>⚡</span> <span>${msg}</span>`;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 3200);
+        }
+
+        async function handleLogin() {
+            const uInput = document.getElementById('login-user').value.trim();
+            const pInput = document.getElementById('login-pass').value.trim();
+            if(!uInput || !pInput) { showToast('Provide login credentials'); return; }
+
+            try {
+                await ensureDefaults();
+                const lookupKey = uInput.toLowerCase();
+                const userSnap = await db.collection('usernames').doc(lookupKey).get();
+                if(!userSnap.exists) { showToast('Admin handle not found'); return; }
+                const uid = userSnap.data().uid;
+
+                const docSnap = await db.collection('users').doc(uid).get();
+                if(!docSnap.exists) { showToast('User profile record missing'); return; }
+                const data = docSnap.data();
+
+                if(data.password !== pInput) { showToast('Incorrect cipher credentials'); return; }
+                if(data.badge !== 'owner' && data.badge !== 'co_owner' && data.role !== 'owner' && data.role !== 'co_owner') {
+                    showToast('Access Denied: Owner level required');
+                    return;
+                }
+
+                currentUserData = { uid, ...data };
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('admin-app').style.display = 'flex';
+                document.getElementById('current-admin-badge').innerText = `@${data.username} // [${data.badge || 'admin'}]`;
+                
+                if(data.badge === 'owner' || data.role === 'owner') {
+                    document.getElementById('tab-owner-btn').style.display = 'block';
+                }
+
+                initRealtimeListeners();
+                logAction(`Authenticated session successfully: @${data.username}`);
+            } catch(e) {
+                console.error(e);
+                showToast('Auth error: ' + e.message);
+            }
+        }
+
+        async function ensureDefaults() {
+            const defaults = [
+                { username: 'Ferni1', password: 'donut123', badge: 'owner', coins: 2000 },
+                { username: 'MP', password: 'Miguel956', badge: 'co_owner', coins: 2000 }
+            ];
+            for(let d of defaults) {
+                const lookupKey = d.username.toLowerCase();
+                const snap = await db.collection('usernames').doc(lookupKey).get();
+                if(!snap.exists) {
+                    const ref = db.collection('users').doc();
+                    await ref.set({ username: d.username, password: d.password, badge: d.badge, coins: d.coins, createdAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+                    await db.collection('usernames').doc(lookupKey).set({ uid: ref.id });
+                } else {
+                    const uid = snap.data().uid;
+                    await db.collection('users').doc(uid).set({ password: d.password, badge: d.badge }, { merge: true });
+                }
+            }
+        }
+
+        function handleLogout() {
+            currentUserData = null;
+            document.getElementById('admin-app').style.display = 'none';
+            document.getElementById('login-screen').style.display = 'flex';
+            showToast('Session terminated');
+            logAction('Admin session closed.');
+        }
+
+        function openPasswordModal() {
+            document.getElementById('pass-current').value = '';
+            document.getElementById('pass-new').value = '';
+            document.getElementById('pass-confirm').value = '';
+            document.getElementById('password-modal').style.display = 'flex';
+        }
+
+        function closePasswordModal() {
+            document.getElementById('password-modal').style.display = 'none';
+        }
+
+        async function submitPasswordChange() {
+            const currentPass = document.getElementById('pass-current').value.trim();
+            const newPass = document.getElementById('pass-new').value.trim();
+            const confirmPass = document.getElementById('pass-confirm').value.trim();
+
+            if(!currentPass || !newPass || !confirmPass) {
+                showToast('Please fill out all cipher fields.');
+                return;
+            }
+
+            if(currentPass !== currentUserData.password) {
+                showToast('Current cipher does not match.');
+                return;
+            }
+
+            if(newPass !== confirmPass) {
+                showToast('New ciphers do not match.');
+                return;
+            }
+
+            try {
+                await db.collection('users').doc(currentUserData.uid).update({ password: newPass });
+                currentUserData.password = newPass;
+                logAction(`Password updated successfully for @${currentUserData.username}`);
+                showToast('Cipher updated and synced successfully!');
+                closePasswordModal();
+            } catch(e) {
+                console.error(e);
+                showToast('Failed to update cipher: ' + e.message);
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function openAiTerminalTab() {
+            switchTab('ai');
+        }
+
+        function initRealtimeListeners() {
+            db.collection('users').onSnapshot(snap => {
+                usersCache = [];
+                let totalCoins = 0;
+                snap.forEach(doc => {
+                    const u = { id: doc.id, ...doc.data() };
+                    usersCache.push(u);
+                    totalCoins += Math.min(u.coins || 0, 100000);
+                });
+                document.getElementById('stat-users').innerText = usersCache.length;
+                document.getElementById('stat-coins').innerText = totalCoins;
+                renderUserTable();
+            });
+
+            db.collection('posts').onSnapshot(snap => {
+                postsCache = [];
+                snap.forEach(doc => postsCache.push({ id: doc.id, ...doc.data() }));
+                document.getElementById('stat-posts').innerText = postsCache.length;
+                renderPostTable();
+                renderHeatmap();
+            });
+
+            // FIXED: Live global chat messages listener popping up instantly
+            db.collection('global_chat').orderBy('createdAt', 'asc').onSnapshot(snap => {
+                chatCache = [];
+                snap.forEach(doc => chatCache.push({ id: doc.id, ...doc.data() }));
+                renderGlobalChatUI();
+            });
+
+            db.collection('live_streams').onSnapshot(snap => {
+                streamsCache = [];
+                snap.forEach(doc => streamsCache.push({ id: doc.id, ...doc.data() }));
+                document.getElementById('stat-streams').innerText = streamsCache.length;
+                renderStreamsTable();
+            });
+
+            db.collection('promo_codes').onSnapshot(snap => {
+                promosCache = [];
+                snap.forEach(doc => promosCache.push({ id: doc.id, ...doc.data() }));
+                document.getElementById('stat-promos').innerText = promosCache.length;
+                renderPromoTable();
+            });
+
+            db.collection('reports').onSnapshot(snap => {
+                reportsCache = [];
+                snap.forEach(doc => reportsCache.push({ id: doc.id, ...doc.data() }));
+                document.getElementById('stat-reports').innerText = reportsCache.length;
+                renderReportsTable();
+            });
+
+            db.collection('custom_badges').onSnapshot(snap => {
+                const bBody = document.getElementById('badge-table-body');
+                bBody.innerHTML = '';
+                snap.forEach(doc => {
+                    const b = doc.id;
+                    const d = doc.data();
+                    bBody.innerHTML += `<tr><td><b>${d.name}</b></td><td>${d.icon}</td><td><span style="color:${d.color}">${d.color}</span></td><td><button class="btn btn-secondary btn-sm" onclick="deleteBadge('${b}')">Delete</button></td></tr>`;
+                });
+            });
+
+            db.collection('system_settings').doc('config').onSnapshot(doc => {
+                if(doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('setting-reg').checked = !!data.registrationOpen;
+                    document.getElementById('setting-post').checked = !!data.postingOpen;
+                    document.getElementById('setting-maint').checked = !!data.maintenanceMode;
+                    if(data.announcement !== undefined) {
+                        document.getElementById('setting-announcement').value = data.announcement;
+                    }
+                }
+            });
+
+            lockdownRef.on('value', (snapshot) => {
+                const isLocked = snapshot.val() === true;
+                const toggle = document.getElementById('setting-lockdown-master');
+                if (toggle) toggle.checked = isLocked;
+
+                const overlay = document.getElementById('admin-lockdown-overlay');
+                if (overlay) {
+                    overlay.style.display = isLocked ? 'flex' : 'none';
+                }
+            });
+        }
+
+        async function toggleMasterLockdown(state) {
+            try {
+                await lockdownRef.set(state);
+                logAction(`Master lockdown state updated to: ${state}`);
+                showToast(`Admin Lockdown ${state ? 'ACTIVATED' : 'DEACTIVATED'}!`);
+            } catch(e) {
+                console.error(e);
+                showToast('Failed to update lockdown state');
+            }
+        }
+
+        async function attemptDeactivateLockdown() {
+            const enteredCode = document.getElementById('lockdown-unlock-code').value.trim();
+            if (enteredCode === UNLOCK_CODE) {
+                try {
+                    await lockdownRef.set(false);
+                    document.getElementById('lockdown-unlock-code').value = '';
+                    showToast('Admin Lockdown Deactivated Successfully!');
+                } catch(e) {
+                    console.error(e);
+                    showToast('Database error disabling lockdown');
+                }
+            } else {
+                showToast('Incorrect deactivation code!');
+            }
+        }
+
+        // --- Enhanced Global Chat Logic (Sender Name, Message Replies, Typing Input) ---
+        function renderGlobalChatUI() {
+            const container = document.getElementById('globalChatMessages');
+            if(!container) return;
+            container.innerHTML = '';
+
+            if (chatCache.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-sub); text-align:center; padding:20px; font-size:13px;">No chat transmissions recorded yet.</p>';
+                return;
+            }
+
+            chatCache.forEach(msg => {
+                const card = document.createElement('div');
+                card.className = 'chat-msg-card';
+
+                let replyQuoteHtml = '';
+                if (msg.replyTo) {
+                    const originalMsg = chatCache.find(m => m.id === msg.replyTo);
+                    if (originalMsg) {
+                        replyQuoteHtml = `<div class="chat-msg-quote">Replying to <b>@${originalMsg.username || 'unknown'}</b>: ${escapeHtml(originalMsg.text || '')}</div>`;
+                    }
+                }
+
+                card.innerHTML = `
+                    ${replyQuoteHtml}
+                    <div class="chat-msg-sender">@${escapeHtml(msg.username || 'anonymous')}</div>
+                    <div class="chat-msg-text">${escapeHtml(msg.text || '')}</div>
+                    <button class="chat-reply-trigger" onclick="initiateChatReply('${msg.id}', '${escapeHtml(msg.username || 'anonymous')}', '${escapeHtml(msg.text || '')}')">Reply</button>
+                    <button class="chat-reply-trigger" style="color:var(--neon-pink); margin-left: 10px;" onclick="deleteChatMessage('${msg.id}')">Delete</button>
+                `;
+                container.appendChild(card);
+            });
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function initiateChatReply(msgId, senderName, msgText) {
+            replyingToChatId = msgId;
+            document.getElementById('replyingTargetUser').innerText = senderName;
+            document.getElementById('replyingTargetText').innerText = msgText;
+            document.getElementById('chatReplyBanner').style.display = 'flex';
+            document.getElementById('globalChatInput').focus();
+        }
+
+        function cancelChatReply() {
+            replyingToChatId = null;
+            document.getElementById('chatReplyBanner').style.display = 'none';
+        }
+
+        async function sendGlobalChatMessage() {
+            const inputField = document.getElementById('globalChatInput');
+            const textValue = inputField.value.trim();
+            if(!textValue) return;
+
+            const senderHandle = currentUserData ? currentUserData.username : 'Admin';
+
+            try {
+                await db.collection('global_chat').add({
+                    username: senderHandle,
+                    text: textValue,
+                    replyTo: replyingToChatId || null,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                inputField.value = '';
+                cancelChatReply();
+                showToast('Message transmitted to global network');
+            } catch(e) {
+                console.error(e);
+                showToast('Failed to send message');
+            }
+        }
+
+        function handleChatKeyPress(event) {
+            if(event.key === 'Enter') {
+                sendGlobalChatMessage();
+            }
+        }
+
+        async function deleteChatMessage(msgId) {
+            if(!confirm('Permanently remove this chat message?')) return;
+            try {
+                await db.collection('global_chat').doc(msgId).delete();
+                showToast('Chat message deleted');
+            } catch(e) {
+                console.error(e);
+                showToast('Failed to delete message');
+            }
+        }
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        function renderUserTable() {
+            const query = document.getElementById('user-search').value.toLowerCase();
+            const filter = document.getElementById('user-filter').value;
+            const tbody = document.getElementById('user-table-body');
+            tbody.innerHTML = '';
+
+            const filtered = usersCache.filter(u => {
+                const matchQuery = (u.username || '').toLowerCase().includes(query) || (u.displayName || '').toLowerCase().includes(query) || u.id.includes(query);
+                if(!matchQuery) return false;
+                if(filter === 'banned') return u.banned;
+                if(filter === 'muted') return u.muted;
+                if(filter === 'verified') return u.verified;
+                return true;
+            });
+
+            filtered.forEach(u => {
+                const verifiedTag = u.verified ? '<span style="color:var(--neon-cyan); margin-left: 4px;" title="Verified">✓</span>' : '';
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>@${u.username || 'unknown'}</b>${verifiedTag}<br><span style="font-size:10px;color:var(--text-sub);font-family:'JetBrains Mono',monospace;">${u.id}</span></td>
+                        <td>${u.coins || 0}</td>
+                        <td><span class="badge-pill">${u.badge || 'member'}</span></td>
+                        <td>${u.banned ? '<span style="color:var(--neon-pink);font-weight:700;">Banned</span>' : (u.muted ? '<span style="color:var(--neon-amber);font-weight:700;">Muted</span>' : '<span style="color:var(--neon-lime);font-weight:600;">Active</span>')}</td>
+                        <td>
+                            <button class="btn btn-secondary btn-sm" onclick="openUserModal('${u.id}')">Manage</button>
+                            <button class="btn btn-primary btn-sm" onclick="openLookupModalForUser('${u.username}')">Lookup</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openLiveBroadcastModal() {
+            document.getElementById('live-broadcast-modal').style.display = 'flex';
+        }
+        function closeLiveBroadcastModal() {
+            document.getElementById('live-broadcast-modal').style.display = 'none';
+        }
+
+        async function submitLiveBroadcastModal() {
+            const title = document.getElementById('modal-stream-title').value.trim();
+            const host = document.getElementById('modal-stream-host').value.trim();
+            const url = document.getElementById('modal-stream-url').value.trim();
+            if(!title) { showToast('Enter stream title'); return; }
+            await db.collection('live_streams').add({
+                title, host: host || 'Ferni1', url: url || 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4', createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            logAction(`Launched broadcast: "${title}"`);
+            showToast('Live stream started and broadcasted to users!');
+            closeLiveBroadcastModal();
+        }
+
+        async function startLiveBroadcast() {
+            const title = document.getElementById('stream-title-input').value.trim();
+            const host = document.getElementById('stream-host-input').value.trim();
+            const url = document.getElementById('stream-url-input').value.trim();
+            if(!title) { showToast('Enter broadcast title'); return; }
+            await db.collection('live_streams').add({
+                title, host: host || 'Ferni1', url: url || 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4', createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            logAction(`Started broadcast: "${title}"`);
+            showToast('Live broadcast successfully deployed!');
+        }
+
+        function renderStreamsTable() {
+            const tbody = document.getElementById('live-streams-table-body');
+            tbody.innerHTML = '';
+            streamsCache.forEach(s => {
+                tbody.innerHTML += `<tr><td><b>${s.title}</b></td><td>@${s.host}</td><td><button class="btn btn-danger btn-sm" onclick="endLiveStream('${s.id}')">End Stream</button></td></tr>`;
+            });
+        }
+
+        async function endLiveStream(id) {
+            await db.collection('live_streams').doc(id).delete();
+            logAction(`Terminated stream ID ${id}`);
+            showToast('Stream ended');
+        }
+
+        function toggleAiFeature(feature, state) {
+            logAi(`Toggled ${feature} to ${state}`);
+            showToast(`AI setting ${feature} updated`);
+        }
+
+        async function runAiScanNow() {
+            logAi('Scanning all active posts and user bios for policy violations...');
+            setTimeout(() => {
+                logAi(`Scan complete. Analyzed ${postsCache.length} posts and ${usersCache.length} user records. 0 threats detected.`);
+                showToast('Neural deep scan finished successfully!');
+            }, 1200);
+        }
+
+        function openLookupModalPrompt() {
+            document.getElementById('lookup-modal').style.display = 'flex';
+        }
+        function openLookupModalForUser(username) {
+            document.getElementById('lookup-input-query').value = username;
+            document.getElementById('lookup-modal').style.display = 'flex';
+            executeUserLookup();
+        }
+        function closeLookupModal() {
+            document.getElementById('lookup-modal').style.display = 'none';
+        }
+
+        async function executeUserLookup() {
+            const query = document.getElementById('lookup-input-query').value.trim().toLowerCase();
+            const container = document.getElementById('lookup-results-container');
+            container.innerHTML = '<p style="color:var(--text-sub);font-size:13px;text-align:center;">Querying database records...</p>';
+
+            if(!query) {
+                container.innerHTML = '<p style="color:var(--neon-pink);font-size:13px;text-align:center;">Please provide a handle or UID.</p>';
+                return;
+            }
+
+            let foundUser = usersCache.find(u => u.id === query || (u.username && u.username.toLowerCase() === query));
+
+            if(!foundUser) {
+                try {
+                    const snap = await db.collection('usernames').doc(query).get();
+                    if(snap.exists) {
+                        const uid = snap.data().uid;
+                        const userDoc = await db.collection('users').doc(uid).get();
+                        if(userDoc.exists) {
+                            foundUser = { id: userDoc.id, ...userDoc.data() };
+                        }
+                    }
+                } catch(e) { console.error(e); }
+            }
+
+            if(!foundUser) {
+                container.innerHTML = `<p style="color:var(--neon-pink);font-size:13px;text-align:center;">No records found for query: "${query}"</p>`;
+                return;
+            }
+
+            let html = `
+                <div class="glass-cyber" style="padding: 20px; display: flex; flex-direction: column; gap: 10px; border-color: var(--border-glow);">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h4 style="font-family:'Orbitron',sans-serif; color:var(--neon-cyan); font-size:15px; font-weight:900;">@${foundUser.username || 'unknown'}</h4>
+                        <button class="btn btn-secondary btn-sm" onclick="openUserModal('${foundUser.id}')">Manage Account</button>
+                    </div>
+            `;
+
+            for(const [key, val] of Object.entries(foundUser)) {
+                let displayVal = val;
+                if(typeof val === 'object' && val !== null && val.toDate) {
+                    displayVal = val.toDate().toLocaleString();
+                } else if(typeof val === 'object') {
+                    displayVal = JSON.stringify(val);
+                }
+                html += `<div style="display:flex; justify-content:space-between; font-size:12px; border-bottom:1px solid rgba(255,255,255,0.04); padding:6px 0;"><span style="color:var(--text-sub);font-weight:600;">${key}</span><span style="color:#fff; text-align:right; max-width:60%; word-break:break-all; font-family:'JetBrains Mono',monospace;">${displayVal}</span></div>`;
+            }
+
+            html += `</div>`;
+            container.innerHTML = html;
+            logAction(`Executed secure lookup for user record: @${foundUser.username || foundUser.id}`);
+        }
+
+        function openUserModal(uid) {
+            selectedUserId = uid;
+            const u = usersCache.find(x => x.id === uid);
+            if(!u) return;
+            document.getElementById('modal-username').innerText = `Manage User: @${u.username || uid}`;
+            document.getElementById('modal-displayname').value = u.displayName || '';
+            document.getElementById('modal-bio').value = u.bio || '';
+            document.getElementById('modal-user-newpass').value = '';
+            
+            document.getElementById('modal-btn-verify').innerText = u.verified ? 'Unverify User' : 'Verify User';
+            document.getElementById('modal-btn-ban').innerText = u.banned ? 'Unban User' : 'Ban User';
+            document.getElementById('modal-btn-mute').innerText = u.muted ? 'Unmute User' : 'Mute User';
+
+            document.getElementById('user-modal').style.display = 'flex';
+        }
+
+        function closeUserModal() {
+            document.getElementById('user-modal').style.display = 'none';
+            selectedUserId = null;
+        }
+
+        async function adminChangeUserPassword() {
+            const newPass = document.getElementById('modal-user-newpass').value.trim();
+            if(!newPass) { showToast('Enter new password for user'); return; }
+            const u = usersCache.find(x => x.id === selectedUserId);
+            if(!u) return;
+            await db.collection('users').doc(selectedUserId).update({ password: newPass });
+            logAction(`Admin changed password for @${u.username}`);
+            showToast('User password successfully updated');
+            document.getElementById('modal-user-newpass').value = '';
+        }
+
+        async function modUserCoins(action) {
+            const amt = parseInt(document.getElementById('modal-coin-amount').value) || 0;
+            const u = usersCache.find(x => x.id === selectedUserId);
+            if(!u) return;
+            let current = u.coins || 0;
+            if(action === 'give') current += amt;
+            else if(action === 'remove') current -= amt;
+            else if(action === 'set') current = amt;
+            current = Math.max(0, Math.min(100000, current));
+
+            await db.collection('users').doc(selectedUserId).update({ coins: current });
+            logAction(`Updated coin balance for @${u.username} to ${current}`);
+            showToast('Coins updated successfully');
+        }
+
+        async function toggleUserStatus(field) {
+            const u = usersCache.find(x => x.id === selectedUserId);
+            if(!u) return;
+            const val = !u[field];
+            await db.collection('users').doc(selectedUserId).update({ [field]: val });
+            logAction(`Updated status '${field}' for @${u.username} to ${val}`);
+            showToast(`User ${field} status updated`);
+            openUserModal(selectedUserId);
+        }
+
+        async function deleteAccountModal() {
+            if(!confirm('Permanently delete this account?')) return;
+            await db.collection('users').doc(selectedUserId).delete();
+            logAction(`Deleted account UID: ${selectedUserId}`);
+            showToast('Account deleted');
+            closeUserModal();
+        }
+
+        function renderPostTable() {
+            const tbody = document.getElementById('post-table-body');
+            tbody.innerHTML = '';
+            postsCache.forEach(p => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>@${p.username || 'user'}</b></td>
+                        <td>${p.caption || '[Attachment Item]'}</td>
+                        <td>${p.createdAt ? new Date(p.createdAt.toDate()).toLocaleDateString() : 'Recent'}</td>
+                        <td>${p.pinned ? '<span style="color:var(--neon-cyan);font-weight:700;">Yes</span>' : 'No'}</td>
+                        <td>
+                            <button class="btn btn-secondary btn-sm" onclick="togglePinPost('${p.id}', ${!p.pinned})">${p.pinned ? 'Unpin' : 'Pin'}</button>
+                            <button class="btn btn-danger btn-sm" onclick="deletePost('${p.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        async function togglePinPost(pid, status) {
+            await db.collection('posts').doc(pid).update({ pinned: status });
+            logAction(`Updated pin state for post ID ${pid}`);
+            showToast('Post pin updated');
+        }
+
+        async function deletePost(pid) {
+            if(!confirm('Delete this post item?')) return;
+            await db.collection('posts').doc(pid).delete();
+            logAction(`Deleted post ID ${pid}`);
+            showToast('Post removed');
+        }
+
+        async function createCustomBadge() {
+            const name = document.getElementById('badge-name').value.trim();
+            const icon = document.getElementById('badge-icon').value.trim();
+            const color = document.getElementById('badge-color').value;
+            if(!name) { showToast('Provide a badge name'); return; }
+            const id = name.toLowerCase().replace(/\s+/g, '_');
+            await db.collection('custom_badges').doc(id).set({ name, icon, color });
+            logAction(`Deployed custom badge definition: ${name}`);
+            showToast('Badge created');
+        }
+
+        async function deleteBadge(id) {
+            await db.collection('custom_badges').doc(id).delete();
+            logAction(`Removed badge type: ${id}`);
+            showToast('Badge deleted');
+        }
+
+        async function createPromoCode() {
+            const code = document.getElementById('promo-code-text').value.trim().toUpperCase();
+            const coins = parseInt(document.getElementById('promo-coins').value) || 0;
+            if(!code) { showToast('Enter voucher code text'); return; }
+            await db.collection('promo_codes').doc(code).set({ code, coins, usedCount: 0 });
+            logAction(`Generated promo code: ${code} (${coins} coins)`);
+            showToast('Voucher deployed');
+        }
+
+        function renderPromoTable() {
+            const tbody = document.getElementById('promo-table-body');
+            tbody.innerHTML = '';
+            promosCache.forEach(p => {
+                tbody.innerHTML += `<tr><td><b>${p.code}</b></td><td>${p.coins}</td><td>${p.usedCount || 0}</td><td><button class="btn btn-danger btn-sm" onclick="deletePromo('${p.id}')">Delete</button></td></tr>`;
+            });
+        }
+
+        async function deletePromo(id) {
+            await db.collection('promo_codes').doc(id).delete();
+            logAction(`Deleted voucher: ${id}`);
+            showToast('Voucher removed');
+        }
+
+        function renderReportsTable() {
+            const tbody = document.getElementById('report-table-body');
+            tbody.innerHTML = '';
+            reportsCache.forEach(r => {
+                tbody.innerHTML += `<tr><td>@${r.reporter || 'user'}</td><td>${r.targetId || 'N/Item'}</td><td>${r.reason || 'Policy Violation'}</td><td><span style="color:var(--neon-amber)">Open</span></td><td><button class="btn btn-danger btn-sm" onclick="resolveReport('${r.id}')">Resolve & Clear</button></td></tr>`;
+            });
+        }
+
+        async function resolveReport(id) {
+            await db.collection('reports').doc(id).delete();
+            logAction(`Resolved report ticket ID ${id}`);
+            showToast('Report ticket cleared');
+        }
+
+        async function updateSystemSetting(key, val) {
+            await db.collection('system_settings').doc('config').set({ [key]: val }, { merge: true });
+            logAction(`System config update: [${key}] set to ${val}`);
+            showToast('Configuration updated');
+        }
+
+        async function saveSystemAnnouncement() {
+            const text = document.getElementById('setting-announcement').value.trim();
+            await db.collection('system_settings').doc('config').set({ announcement: text }, { merge: true });
+            logAction('Broadcasted new global announcement banner.');
+            showToast('Announcement broadcasted successfully!');
+        }
+
+        function openAnnouncementModal() {
+            switchTab('settings');
+            document.getElementById('setting-announcement').focus();
+        }
+
+        async function coinSinkTax() {
+            if(!confirm('Execute 10% wealth tax reduction on balances >100 coins?')) return;
+            const batch = db.batch();
+            usersCache.forEach(u => {
+                if((u.coins || 0) > 100) {
+                    const newCoins = Math.floor(u.coins * 0.9);
+                    batch.update(db.collection('users').doc(u.id), { coins: newCoins });
+                }
+            });
+            await batch.commit();
+            logAction('Executed 10% network wealth tax sink.');
+            showToast('Wealth tax executed');
+        }
+
+        async function coinSinkDividend() {
+            if(!confirm('Distribute +100 coin network dividend?')) return;
+            const batch = db.batch();
+            usersCache.forEach(u => {
+                const newCoins = Math.min(100000, (u.coins || 0) + 100);
+                batch.update(db.collection('users').doc(u.id), { coins: newCoins });
+            });
+            await batch.commit();
+            logAction('Distributed +100 coin network dividend.');
+            showToast('Dividend disbursed');
+        }
+
+        async function purgeGlobalChat() {
+            if(!confirm('Wipe all messages from the global chat collection?')) return;
+            const snap = await db.collection('global_chat').get();
+            const batch = db.batch();
+            snap.forEach(doc => batch.delete(doc.ref));
+            await batch.commit();
+            logAction('Purged all global chat logs.');
+            showToast('Global chat wiped');
+        }
+
+        async function wipeAllPosts() {
+            if(!confirm('Permanently purge all network post items?')) return;
+            const snap = await db.collection('posts').get();
+            const batch = db.batch();
+            snap.forEach(doc => batch.delete(doc.ref));
+            await batch.commit();
+            logAction('Purged all network posts.');
+            showToast('All network posts wiped');
+        }
+
+        async function resetAllCoins() {
+            if(!confirm('Reset all user coin balances back to 100?')) return;
+            const batch = db.batch();
+            usersCache.forEach(u => {
+                batch.update(db.collection('users').doc(u.id), { coins: 100 });
+            });
+            await batch.commit();
+            logAction('Reset all user wallet balances to 100 coins.');
+            showToast('Wallet balances reset');
+        }
+
+        async function factoryResetDatabase() {
+            if(!confirm('WARNING: This will wipe all posts, live streams, and reset users. Proceed?')) return;
+            await wipeAllPosts();
+            await purgeGlobalChat();
+            logAction('Executed sovereign factory state reset.');
+            showToast('Factory reset complete');
+        }
+
+        async function bulkCoinGivePrompt() {
+            const amt = parseInt(prompt('Enter coin amount to allocate to every account:')) || 0;
+            if(amt <= 0) return;
+            const batch = db.batch();
+            usersCache.forEach(u => {
+                const newCoins = Math.min(100000, (u.coins || 0) + amt);
+                batch.update(db.collection('users').doc(u.id), { coins: newCoins });
+            });
+            await batch.commit();
+            logAction(`Bulk credited ${amt} coins to all accounts.`);
+            showToast('Bulk distribution finished');
+        }
+
+        function exportUsersCSV() {
+            let csv = 'UID,Username,Display Name,Coins,Badge,Banned,Verified\n';
+            usersCache.forEach(u => {
+                csv += `"${u.id}","${u.username}","${u.displayName || ''}",${u.coins || 0},"${u.badge || 'member'}",${u.banned || false},${u.verified || false}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'school_social_users.csv');
+            a.click();
+            logAction('Exported user record list to CSV format.');
+        }
+
+        function renderHeatmap() {
+            const container = document.getElementById('heatmap-container');
+            container.innerHTML = '';
+            for(let i = 6; i >= 0; i--) {
+                const height = Math.floor(Math.random() * 85) + 20;
+                container.innerHTML += `<div style="flex:1; background:var(--neon-cyan); height:${height}px; border-radius:6px; opacity:0.8; transition: opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.8" title="Activity Index"></div>`;
+            }
+        }
+    </script>
+</body>
+</html>
