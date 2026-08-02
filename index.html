@@ -18,18 +18,18 @@
             --neon-pink: #ff007f;
             --neon-lime: #39ff14;
             --neon-amber: #ffb703;
-            --bg-void: #030712;
-            --bg-deep: #0b0f19;
-            --bg-card: rgba(15, 23, 42, 0.85);
-            --bg-input: rgba(30, 41, 59, 0.7);
-            --border-cyber: rgba(0, 240, 255, 0.25);
-            --border-glow: rgba(0, 240, 255, 0.6);
+            --bg-void: #020617;
+            --bg-deep: #070b19;
+            --bg-card: rgba(11, 19, 38, 0.88);
+            --bg-input: rgba(19, 28, 48, 0.8);
+            --border-cyber: rgba(0, 240, 255, 0.3);
+            --border-glow: rgba(0, 240, 255, 0.7);
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
-            --radius-cyber: 14px;
-            --radius-lg: 24px;
-            --shadow-cyber: 0 0 35px -5px rgba(0, 240, 255, 0.2);
-            --shadow-intense: 0 0 50px -5px rgba(176, 38, 255, 0.3);
+            --radius-cyber: 16px;
+            --radius-lg: 26px;
+            --shadow-cyber: 0 0 40px -5px rgba(0, 240, 255, 0.25);
+            --shadow-intense: 0 0 60px -5px rgba(176, 38, 255, 0.35);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -49,413 +49,229 @@
             content: "";
             position: fixed; inset: 0;
             background-image: 
-                linear-gradient(to right, rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
+                linear-gradient(to right, rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
+            background-size: 45px 45px;
             z-index: -1;
         }
 
+        /* --- IMMERSIVE CYBERNETIC LOADING SCREEN --- */
+        #loading-screen {
+            position: fixed; inset: 0; background: var(--bg-void); z-index: 999999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 24px;
+            font-family: 'Orbitron', sans-serif; transition: opacity 0.5s ease;
+        }
+        .loader-core {
+            width: 80px; height: 80px; border: 3px solid rgba(0,240,255,0.2); border-top: 3px solid var(--neon-cyan);
+            border-radius: 50%; animation: spinLoader 1s linear infinite; box-shadow: 0 0 30px rgba(0,240,255,0.4);
+        }
+        @keyframes spinLoader { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loader-text { color: var(--neon-cyan); font-size: 13px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; }
+        .loader-bar-track { width: 280px; height: 4px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+        .loader-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); transition: width 0.15s ease; }
+
         .container {
-            width: 100%;
-            max-width: 1700px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding: 24px;
-            gap: 20px;
+            width: 100%; max-width: 1750px; min-height: 100vh;
+            display: flex; flex-direction: column; padding: 24px; gap: 20px;
         }
 
         .glass-cyber {
             background: var(--bg-card);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
             border: 1px solid var(--border-cyber);
             border-radius: var(--radius-cyber);
             box-shadow: var(--shadow-cyber);
         }
 
         #login-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex: 1;
+            display: flex; justify-content: center; align-items: center; flex: 1;
         }
 
         .auth-card {
-            width: 100%;
-            max-width: 480px;
-            padding: 48px;
-            display: flex;
-            flex-direction: column;
-            gap: 22px;
+            width: 100%; max-width: 500px; padding: 52px;
+            display: flex; flex-direction: column; gap: 24px;
             box-shadow: var(--shadow-intense);
-            border: 1px solid rgba(176, 38, 255, 0.4);
-            position: relative;
-            overflow: hidden;
+            border: 1px solid rgba(176, 38, 255, 0.45);
+            position: relative; overflow: hidden;
         }
 
         .auth-card::after {
-            content: "";
-            position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
             background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
         }
 
         .auth-card h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 24px;
-            font-weight: 900;
-            text-align: center;
-            letter-spacing: 1px;
+            font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
+            text-align: center; letter-spacing: 1.5px;
             background: linear-gradient(135deg, #fff 30%, var(--neon-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             text-transform: uppercase;
         }
 
         .auth-card p {
-            text-align: center;
-            color: var(--text-sub);
-            font-size: 12px;
-            letter-spacing: 0.5px;
-            margin-top: -10px;
-            text-transform: uppercase;
+            text-align: center; color: var(--text-sub); font-size: 12px;
+            letter-spacing: 1px; margin-top: -12px; text-transform: uppercase;
         }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
         .input-group label {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--neon-cyan);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
+            font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 700;
+            color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px;
         }
 
         .input {
-            width: 100%;
-            padding: 14px 18px;
-            background: var(--bg-input);
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            border-radius: 10px;
-            color: #fff;
-            outline: none;
-            font-size: 14px;
-            font-family: inherit;
+            width: 100%; padding: 15px 18px; background: var(--bg-input);
+            border: 1px solid rgba(0, 240, 255, 0.25); border-radius: 12px;
+            color: #fff; outline: none; font-size: 14px; font-family: inherit;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .input:focus {
             border-color: var(--neon-cyan);
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
-            background: rgba(30, 41, 59, 0.95);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
+            background: rgba(19, 28, 48, 0.98);
         }
 
         .btn {
-            padding: 14px 20px;
-            border: none;
-            border-radius: 10px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-size: 11px;
-            transition: all 0.25s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            padding: 15px 22px; border: none; border-radius: 12px;
+            font-family: 'Orbitron', sans-serif; font-weight: 700; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1.5px; font-size: 11px;
+            transition: all 0.25s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
         }
-
-        .btn:active {
-            transform: scale(0.96);
-        }
+        .btn:active { transform: scale(0.96); }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-            color: #030712;
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
-            font-weight: 900;
+            color: #020617; box-shadow: 0 0 30px rgba(0, 240, 255, 0.45); font-weight: 900;
         }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 35px rgba(0, 240, 255, 0.7);
-            filter: brightness(1.1);
-        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(0, 240, 255, 0.75); filter: brightness(1.1); }
 
         .btn-danger {
-            background: rgba(255, 0, 127, 0.15);
-            color: var(--neon-pink);
-            border: 1px solid rgba(255, 0, 127, 0.4);
+            background: rgba(255, 0, 127, 0.15); color: var(--neon-pink); border: 1px solid rgba(255, 0, 127, 0.4);
         }
-        .btn-danger:hover { background: var(--neon-pink); color: #fff; box-shadow: 0 0 20px rgba(255, 0, 127, 0.5); }
+        .btn-danger:hover { background: var(--neon-pink); color: #fff; box-shadow: 0 0 25px rgba(255, 0, 127, 0.6); }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--text-main);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.04); color: var(--text-main); border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
         .btn-secondary:hover {
-            background: rgba(0, 240, 255, 0.1);
-            border-color: var(--neon-cyan);
-            color: var(--neon-cyan);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+            background: rgba(0, 240, 255, 0.1); border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 20px rgba(0, 240, 255, 0.25);
         }
-
-        .btn-sm { padding: 8px 14px; font-size: 9px; letter-spacing: 1px; }
+        .btn-sm { padding: 9px 16px; font-size: 9px; letter-spacing: 1px; }
 
         #admin-app { display: none; flex-direction: column; flex: 1; gap: 20px; animation: fadeIn 0.4s ease; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 28px;
-            flex-wrap: wrap;
-            gap: 15px;
+            display: flex; justify-content: space-between; align-items: center; padding: 20px 32px; flex-wrap: wrap; gap: 16px;
         }
-
-        .brand-area {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
+        .brand-area { display: flex; align-items: center; gap: 18px; }
         .brand-logo {
-            width: 48px; height: 48px;
-            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900; font-size: 18px; color: #030712;
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
+            width: 52px; height: 52px; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 20px; color: #020617;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
         }
 
-        .nav-tabs {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-        }
-
+        .nav-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; }
         .nav-tab {
-            padding: 12px 18px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            color: var(--text-sub);
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            font-size: 10px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            white-space: nowrap;
-            transition: all 0.25s;
+            padding: 13px 20px; background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px;
+            color: var(--text-sub); font-family: 'Orbitron', sans-serif; font-weight: 700;
+            font-size: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+            white-space: nowrap; transition: all 0.25s;
         }
-
-        .nav-tab:hover { color: #fff; background: rgba(0, 240, 255, 0.05); border-color: rgba(0, 240, 255, 0.3); }
-        .nav-tab.active { background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); color: #030712; border-color: transparent; box-shadow: 0 0 25px rgba(0, 240, 255, 0.5); font-weight: 900; }
+        .nav-tab:hover { color: #fff; background: rgba(0, 240, 255, 0.06); border-color: rgba(0, 240, 255, 0.35); }
+        .nav-tab.active { background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); color: #020617; border-color: transparent; box-shadow: 0 0 30px rgba(0, 240, 255, 0.6); font-weight: 900; }
 
         .tab-pane { display: none; flex-direction: column; gap: 20px; flex: 1; }
         .tab-pane.active { display: flex; }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 18px;
-        }
-
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
         .stat-card {
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            position: relative;
-            overflow: hidden;
+            padding: 26px; display: flex; flex-direction: column; gap: 8px; position: relative; overflow: hidden;
             transition: transform 0.25s, border-color 0.25s;
         }
-
-        .stat-card:hover { transform: translateY(-3px); border-color: var(--neon-cyan); box-shadow: 0 0 30px rgba(0, 240, 255, 0.3); }
-        .stat-card .val { font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 900; color: var(--neon-cyan); letter-spacing: -1px; }
+        .stat-card:hover { transform: translateY(-3px); border-color: var(--neon-cyan); box-shadow: 0 0 35px rgba(0, 240, 255, 0.35); }
+        .stat-card .val { font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: var(--neon-cyan); letter-spacing: -1px; }
         .stat-card .lbl { font-family: 'Orbitron', sans-serif; font-size: 9px; color: var(--text-sub); text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px; }
 
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 13px;
-        }
-
-        .data-table th, .data-table td {
-            padding: 16px 22px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
+        .data-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+        .data-table th, .data-table td { padding: 18px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
         .data-table th { 
-            font-family: 'Orbitron', sans-serif;
-            color: var(--neon-cyan); 
-            font-size: 9px; 
-            text-transform: uppercase; 
-            letter-spacing: 1.5px; 
-            font-weight: 700; 
-            background: rgba(0, 240, 255, 0.03);
+            font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 9px; 
+            text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; background: rgba(0, 240, 255, 0.04);
         }
-
-        .data-table tr:hover td { background: rgba(0, 240, 255, 0.02); }
-        .table-container { overflow-x: auto; max-height: 520px; overflow-y: auto; }
+        .data-table tr:hover td { background: rgba(0, 240, 255, 0.025); }
+        .table-container { overflow-x: auto; max-height: 540px; overflow-y: auto; }
 
         .terminal {
-            background: #010409;
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            border-radius: 12px;
-            padding: 16px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            height: 130px;
-            overflow-y: auto;
-            color: var(--neon-lime);
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            box-shadow: inset 0 2px 15px rgba(0,0,0,0.9);
+            background: #010409; border: 1px solid rgba(0, 240, 255, 0.25); border-radius: 14px; padding: 18px;
+            font-family: 'JetBrains Mono', monospace; font-size: 11px; height: 140px; overflow-y: auto;
+            color: var(--neon-lime); display: flex; flex-direction: column; gap: 6px; box-shadow: inset 0 2px 20px rgba(0,0,0,0.9);
         }
 
         .modal-overlay {
-            position: fixed; inset: 0; background: rgba(3, 7, 18, 0.88);
+            position: fixed; inset: 0; background: rgba(2, 6, 23, 0.9);
             display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px;
-            backdrop-filter: blur(16px);
-            animation: fadeIn 0.2s ease;
+            backdrop-filter: blur(18px); animation: fadeIn 0.2s ease;
         }
-
         .modal {
-            background: #0b0f19; border: 1px solid var(--border-cyber); border-radius: var(--radius-lg);
-            width: 100%; max-width: 680px; padding: 36px; display: flex; flex-direction: column; gap: 20px;
-            max-height: 90vh; overflow-y: auto; box-shadow: 0 0 60px rgba(0, 240, 255, 0.25);
+            background: var(--bg-deep); border: 1px solid var(--border-cyber); border-radius: var(--radius-lg);
+            width: 100%; max-width: 700px; padding: 40px; display: flex; flex-direction: column; gap: 22px;
+            max-height: 90vh; overflow-y: auto; box-shadow: 0 0 70px rgba(0, 240, 255, 0.3);
         }
 
         .toast {
-            position: fixed; bottom: 30px; right: 30px; background: #0f172a; border: 1px solid var(--neon-cyan);
-            padding: 16px 26px; border-radius: 12px; font-size: 12px; font-weight: 700; z-index: 2000;
-            box-shadow: 0 0 35px rgba(0, 240, 255, 0.35); animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: fixed; bottom: 30px; right: 30px; background: #0b1326; border: 1px solid var(--neon-cyan);
+            padding: 16px 28px; border-radius: 14px; font-size: 12px; font-weight: 700; z-index: 2000;
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.4); animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex; align-items: center; gap: 12px; color: #fff; font-family: 'Orbitron', sans-serif; letter-spacing: 0.5px;
         }
-
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .badge-pill {
-            padding: 4px 12px;
-            background: rgba(0, 240, 255, 0.1);
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            border-radius: 20px;
-            color: var(--neon-cyan);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 9px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            padding: 5px 14px; background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.35);
+            border-radius: 20px; color: var(--neon-cyan); font-family: 'Orbitron', sans-serif; font-size: 9px;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
         }
 
-        /* --- Custom Global Chat Enhancements --- */
+        /* --- ENHANCED GLOBAL CHAT STYLING --- */
         .chat-container-box {
-            display: flex;
-            flex-direction: column;
-            height: 480px;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-cyber);
-            background-color: var(--bg-deep);
+            display: flex; flex-direction: column; height: 520px; border-radius: 14px;
+            overflow: hidden; border: 1px solid var(--border-cyber); background-color: var(--bg-deep);
         }
-
         .chat-messages-scroll {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px;
         }
-
         .chat-msg-card {
-            background: rgba(30, 41, 59, 0.5);
-            padding: 12px 16px;
-            border-radius: 10px;
-            position: relative;
-            max-width: 85%;
-            border-left: 3px solid var(--neon-cyan);
-            border: 1px solid rgba(0, 240, 255, 0.1);
-            animation: fadeInMsg 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(19, 28, 48, 0.6); padding: 14px 18px; border-radius: 12px;
+            position: relative; max-width: 85%; border-left: 3px solid var(--neon-cyan);
+            border: 1px solid rgba(0, 240, 255, 0.15); animation: fadeInMsg 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
         @keyframes fadeInMsg { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
         .chat-msg-sender {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            color: var(--neon-cyan);
-            font-size: 10px;
-            margin-bottom: 4px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif; font-weight: 700; color: var(--neon-cyan);
+            font-size: 10px; margin-bottom: 4px; letter-spacing: 1px; text-transform: uppercase;
         }
-
-        .chat-msg-text {
-            font-size: 13px;
-            word-break: break-word;
-            color: var(--text-main);
-        }
-
+        .chat-msg-text { font-size: 13px; word-break: break-word; color: var(--text-main); line-height: 1.4; }
         .chat-msg-quote {
-            font-size: 11px;
-            background: rgba(0, 240, 255, 0.05);
-            padding: 6px 10px;
-            border-left: 2px solid var(--neon-purple);
-            margin-bottom: 8px;
-            border-radius: 4px;
-            color: var(--text-sub);
+            font-size: 11px; background: rgba(0, 240, 255, 0.05); padding: 6px 12px;
+            border-left: 2px solid var(--neon-purple); margin-bottom: 8px; border-radius: 6px; color: var(--text-sub);
         }
-
         .chat-reply-trigger {
-            background: transparent;
-            color: var(--text-sub);
-            font-size: 10px;
-            padding: 2px 0;
-            margin-top: 6px;
-            cursor: pointer;
-            border: none;
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            background: transparent; color: var(--text-sub); font-size: 10px; padding: 2px 0;
+            margin-top: 8px; cursor: pointer; border: none; font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 1px;
         }
         .chat-reply-trigger:hover { color: var(--neon-cyan); }
-
         .chat-reply-banner {
-            background: rgba(15, 23, 42, 0.95);
-            padding: 10px 18px;
-            font-size: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid var(--border-cyber);
+            background: rgba(11, 19, 38, 0.96); padding: 12px 20px; font-size: 12px;
+            display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-cyber);
         }
-
         .chat-reply-banner span { color: var(--neon-cyan); font-family: 'Orbitron', sans-serif; font-size: 10px; }
-
         .chat-input-bar {
-            display: flex;
-            padding: 14px;
-            background: var(--bg-card);
-            border-top: 1px solid var(--border-cyber);
-            gap: 12px;
+            display: flex; padding: 16px; background: var(--bg-card); border-top: 1px solid var(--border-cyber); gap: 14px;
         }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -464,7 +280,16 @@
     </style>
 </head>
 <body>
-    <!-- Advanced Custom Music & SFX Audio Elements -->
+    <!-- IMMERSIVE LOADING SCREEN -->
+    <div id="loading-screen">
+        <div class="loader-core"></div>
+        <div class="loader-text" id="loader-status-text">Initializing Neural Link...</div>
+        <div class="loader-bar-track">
+            <div class="loader-bar-fill" id="loader-progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- Music & SFX Audio Elements -->
     <audio id="bg-audio" loop preload="auto">
         <source src="https://vgmsite.com/soundtracks/fortnite-battle-royale-ost/jvxrqhzhkq/OG%20Classic%20-%20Lobby%20Music.mp3" type="audio/mpeg">
     </audio>
@@ -472,12 +297,12 @@
         <source src="https://actions.google.com/sounds/v1/ui/button_click.ogg" type="audio/ogg">
     </audio>
 
-    <!-- ADMIN PANEL TOTAL LOCKDOWN OVERLAY -->
-    <div id="admin-lockdown-overlay" style="display: none; position: fixed; inset: 0; background: rgba(3, 7, 18, 0.95); backdrop-filter: blur(20px); z-index: 99999; flex-direction: column; align-items: center; justify-content: center; font-family: 'Orbitron', sans-serif; color: var(--neon-pink); text-align: center; padding: 20px;">
+    <!-- ADMIN PANEL LOCKDOWN OVERLAY -->
+    <div id="admin-lockdown-overlay" style="display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.96); backdrop-filter: blur(20px); z-index: 99999; flex-direction: column; align-items: center; justify-content: center; font-family: 'Orbitron', sans-serif; color: var(--neon-pink); text-align: center; padding: 20px;">
         <div class="glass-cyber auth-card" style="max-width: 480px; padding: 48px; display: flex; flex-direction: column; gap: 22px; border: 1px solid rgba(255, 0, 127, 0.5);">
             <div style="font-size: 48px; margin-bottom: -10px;">🛡️</div>
             <h1 style="color: var(--neon-pink); font-size: 22px;">Admin Lockdown Active</h1>
-            <p style="color: var(--text-sub); font-size: 11px;">The admin command core is securely locked down. Enter the master deactivation code to restore access.</p>
+            <p style="color: var(--text-sub); font-size: 11px;">The admin command core is securely locked down. Enter master override code to restore access.</p>
             <div class="input-group" style="text-align: left;">
                 <label>Deactivation Cipher</label>
                 <input type="password" id="lockdown-unlock-code" class="input" placeholder="Enter override code...">
@@ -491,20 +316,20 @@
         <div id="login-screen">
             <div class="auth-card glass-cyber">
                 <div style="display: flex; justify-content: center; margin-bottom: -6px;">
-                    <div class="brand-logo" style="width: 64px; height: 64px; font-size: 24px;">SS</div>
+                    <div class="brand-logo" style="width: 68px; height: 68px; font-size: 26px;">SS</div>
                 </div>
-                <h1>op admin panel</h1>
-                <p>Commander center</p>
+                <h1>OP Admin Panel</h1>
+                <p>Command Center</p>
                 
                 <div class="input-group">
                     <label>Admin Handle</label>
-                    <input type="text" id="login-user" class="input" placeholder=Username>
+                    <input type="text" id="login-user" class="input" placeholder="Username">
                 </div>
                 <div class="input-group">
-                    <label>Access passwird</label>
+                    <label>Access Password</label>
                     <input type="password" id="login-pass" class="input" placeholder="••••••••••••">
                 </div>
-                <button class="btn btn-primary" onclick="handleLogin()" style="margin-top: 6px;">Initialize Neural Link</button>
+                <button class="btn btn-primary" onclick="handleLogin()" style="margin-top: 6px;">Initialize Session</button>
             </div>
         </div>
 
@@ -514,12 +339,11 @@
                 <div class="brand-area">
                     <div class="brand-logo">SS</div>
                     <div>
-                        <h2 style="font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900; letter-spacing: 0.5px;">CYBERNETIC COMMAND v5.0</h2>
+                        <h2 style="font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900; letter-spacing: 0.5px;">COMMANDS</h2>
                         <span id="current-admin-badge" style="font-family: 'Orbitron', sans-serif; font-size: 9px; color: var(--neon-cyan); text-transform: uppercase; font-weight: 700; letter-spacing: 1px;"></span>
                     </div>
                 </div>
                 <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                    <!-- Custom Music Track Switcher -->
                     <select id="music-track-select" class="input" style="padding: 8px 12px; font-size: 9px; font-family: 'Orbitron', sans-serif; width: 140px;" onchange="changeMusicTrack(this.value)">
                         <option value="https://vgmsite.com/soundtracks/fortnite-battle-royale-ost/jvxrqhzhkq/OG%20Classic%20-%20Lobby%20Music.mp3">🎵 Fortnite OG</option>
                         <option value="https://vgmsite.com/soundtracks/synthwave-radio/synthwave_loop.mp3">🎵 Synthwave Void</option>
@@ -527,7 +351,7 @@
                     </select>
                     <button class="btn btn-secondary btn-sm" id="music-toggle-btn" onclick="toggleCustomMusic()">🎵 Music: OFF</button>
                     <button class="btn btn-primary btn-sm" onclick="openLiveBroadcastModal()">📡 Broadcast Live</button>
-                    <button class="btn btn-secondary btn-sm" onclick="openPasswordModal()">🔒 pass</button>
+                    <button class="btn btn-secondary btn-sm" onclick="openPasswordModal()">🔒 Pass</button>
                     <button class="btn btn-secondary btn-sm" onclick="openAiTerminalTab()">🤖 AI DEC.</button>
                     <button class="btn btn-danger btn-sm" onclick="handleLogout()">Disconnect</button>
                 </div>
@@ -539,11 +363,11 @@
                 <button class="nav-tab" onclick="switchTab('posts')">Network Feeds</button>
                 <button class="nav-tab" onclick="switchTab('chat')">Global Chat</button>
                 <button class="nav-tab" onclick="switchTab('stream')">Live Broadcasting</button>
-                <button class="nav-tab" onclick="switchTab('ai')">AI settings</button>
+                <button class="nav-tab" onclick="switchTab('ai')">AI Settings</button>
                 <button class="nav-tab" onclick="switchTab('badges')">Badges & Ranks</button>
                 <button class="nav-tab" onclick="switchTab('promos')">Voucher Codes</button>
                 <button class="nav-tab" onclick="switchTab('reports')">Report Tickets</button>
-                <button class="nav-tab" onclick="switchTab('settings')">Global </button>
+                <button class="nav-tab" onclick="switchTab('settings')">Global Settings</button>
                 <button class="nav-tab" id="tab-owner-btn" onclick="switchTab('owner')" style="display:none; color: var(--neon-amber); border-color: rgba(255,183,3,0.4);">Owner Vault</button>
             </div>
 
@@ -609,25 +433,21 @@
                 </div>
             </div>
 
-        <!-- TAB: GLOBAL CHAT (Fixed Real-Time Live Message Popping) -->
+            <!-- TAB: GLOBAL CHAT -->
             <div id="tab-chat" class="tab-pane">
                 <div class="glass-cyber" style="padding: 16px; display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Live Global Chat Feed</h3>
+                    <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Live Global Chat Feed (Synced)</h3>
                     <button class="btn btn-danger btn-sm" onclick="purgeGlobalChat()">Wipe Entire Chat</button>
                 </div>
                 
                 <div class="chat-container-box glass-cyber">
-                    <div id="globalChatMessages" class="chat-messages-scroll">
-                        <!-- Messages populated dynamically via JS -->
-                    </div>
+                    <div id="globalChatMessages" class="chat-messages-scroll"></div>
 
-                    <!-- Reply Banner State -->
                     <div id="chatReplyBanner" class="chat-reply-banner" style="display:none;">
                         <div>Replying to <span id="replyingTargetUser"></span>: <span id="replyingTargetText" style="color:var(--text-sub);"></span></div>
                         <button onclick="cancelChatReply()" class="btn btn-secondary btn-sm" style="padding: 2px 8px;">✕</button>
                     </div>
 
-                    <!-- Chat Input Field Area -->
                     <div class="chat-input-bar">
                         <input type="text" id="globalChatInput" class="input" placeholder="Type a message in global chat..." onkeypress="handleChatKeyPress(event)">
                         <button class="btn btn-primary" onclick="sendGlobalChatMessage()">Send Message</button>
@@ -671,7 +491,7 @@
                 <div class="grid-2">
                     <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 18px;">
                         <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Neural Sentinel Engine</h3>
-                        <p style="font-size: 13px; color: var(--text-sub); line-height: 1.5;">The neural scanner automatically evaluates posts and chat feeds for disruptive patterns, unauthorized script payloads, and policy violations.</p>
+                        <p style="font-size: 13px; color: var(--text-sub); line-height: 1.5;">The neural scanner automatically evaluates posts and chat feeds for disruptive patterns and policy violations.</p>
                         <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
                             <span>Active Auto-Filtering</span>
                             <input type="checkbox" id="ai-filter-toggle" checked style="width: 20px; height: 20px; accent-color: var(--neon-cyan); cursor: pointer;" onchange="toggleAiFeature('autoFilter', this.checked)">
@@ -697,8 +517,8 @@
                     <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 18px;">
                         <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Deploy Custom Rank Badge</h3>
                         <div class="input-group">
-                            <label>Badge Title</label>
-                            <input type="text" id="badge-name" class="input" placeholder="e.g. Cyber VIP">
+                            <label>Badge Title / ID</label>
+                            <input type="text" id="badge-name" class="input" placeholder="e.g. Cyber VIP or legend">
                         </div>
                         <div class="input-group">
                             <label>Icon Glyph</label>
@@ -723,20 +543,26 @@
             <div id="tab-promos" class="tab-pane">
                 <div class="grid-2">
                     <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 18px;">
-                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Generate Voucher Code</h3>
+                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Generate Voucher Code (Coins & Badge Rewards)</h3>
                         <div class="input-group">
                             <label>Voucher Code String</label>
-                            <input type="text" id="promo-code-text" class="input" placeholder="e.g. CYBER2026">
+                            <input type="text" id="promo-code-text" class="input" placeholder="e.g. VIPGIFT2026">
                         </div>
                         <div class="input-group">
                             <label>Coin Reward Amount</label>
-                            <input type="number" id="promo-coins" class="input" placeholder="e.g. 1000">
+                            <input type="number" id="promo-coins" class="input" placeholder="e.g. 500">
+                        </div>
+                        <div class="input-group">
+                            <label>Grant Cool Badge (Optional)</label>
+                            <select id="promo-badge-select" class="input">
+                                <option value="">-- No Badge Reward --</option>
+                            </select>
                         </div>
                         <button class="btn btn-primary" onclick="createPromoCode()">Issue Voucher Code</button>
                     </div>
                     <div class="glass-cyber table-container">
                         <table class="data-table">
-                            <thead><tr><th>Code</th><th>Reward</th><th>Redemptions</th><th>Action</th></tr></thead>
+                            <thead><tr><th>Code</th><th>Reward Coins</th><th>Badge Reward</th><th>Redemptions</th><th>Action</th></tr></thead>
                             <tbody id="promo-table-body"></tbody>
                         </table>
                     </div>
@@ -753,7 +579,7 @@
                 </div>
             </div>
 
-            <!-- TAB: SETTINGS & MASTER LOCKDOWN -->
+            <!-- TAB: SETTINGS -->
             <div id="tab-settings" class="tab-pane">
                 <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 20px; max-width: 680px;">
                     <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Global Matrix Parameters</h3>
@@ -815,7 +641,7 @@
         </div>
     </div>
 
-    <!-- Live Broadcast Modal -->
+    <!-- Modals -->
     <div class="modal-overlay" id="live-broadcast-modal">
         <div class="modal glass-cyber">
             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -832,13 +658,12 @@
             </div>
             <div class="input-group">
                 <label>Stream Video URL / Embed Source</label>
-                <input type="text" id="modal-stream-url" class="input" placeholder="https://live.schoolsocial.app/stream/master.m3u8">
+                <input type="text" id="modal-stream-url" class="input" placeholder="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4">
             </div>
             <button class="btn btn-primary" onclick="submitLiveBroadcastModal()">Go Live Instantly</button>
         </div>
     </div>
 
-    <!-- Password Change Modal -->
     <div class="modal-overlay" id="password-modal">
         <div class="modal glass-cyber">
             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -861,7 +686,6 @@
         </div>
     </div>
 
-    <!-- User Lookup / Inspector Modal -->
     <div class="modal-overlay" id="lookup-modal">
         <div class="modal glass-cyber">
             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -878,7 +702,6 @@
         </div>
     </div>
 
-    <!-- Advanced User Management Modal -->
     <div class="modal-overlay" id="user-modal">
         <div class="modal glass-cyber">
             <h3 id="modal-username" style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 16px; font-weight: 900;">Manage User Account</h3>
@@ -943,17 +766,39 @@
         let promosCache = [];
         let streamsCache = [];
         let reportsCache = [];
+        let badgesCache = [];
         let musicPlaying = false;
         let replyingToChatId = null;
 
-        // --- Custom Audio & Micro-Interaction Click SFX Handler ---
+        // --- Simulated High-Tech Loading Screen Sequence ---
+        window.addEventListener('DOMContentLoaded', () => {
+            let progress = 0;
+            const bar = document.getElementById('loader-progress-bar');
+            const status = document.getElementById('loader-status-text');
+            const screen = document.getElementById('loading-screen');
+
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 20) + 10;
+                if(progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    status.innerText = "Neural Link Established.";
+                    setTimeout(() => {
+                        screen.style.opacity = '0';
+                        setTimeout(() => screen.remove(), 500);
+                    }, 350);
+                }
+                bar.style.width = progress + '%';
+            }, 100);
+        });
+
         document.addEventListener('click', (e) => {
             if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
                 const sfx = document.getElementById('click-sfx');
                 if (sfx) {
                     sfx.currentTime = 0;
                     sfx.volume = 0.25;
-                    sfx.play().catch(() => {}); // Safely bypass browser autoplay blocks
+                    sfx.play().catch(() => {});
                 }
             }
         });
@@ -1009,7 +854,7 @@
         function showToast(msg) {
             const t = document.createElement('div');
             t.className = 'toast glass-cyber';
-            t.innerHTML = `<span>⚡</span> <span>${msg}</span>`;
+            t.innerHTML = `⚡ <span>${msg}</span>`;
             document.body.appendChild(t);
             setTimeout(() => t.remove(), 3200);
         }
@@ -1096,20 +941,9 @@
             const newPass = document.getElementById('pass-new').value.trim();
             const confirmPass = document.getElementById('pass-confirm').value.trim();
 
-            if(!currentPass || !newPass || !confirmPass) {
-                showToast('Please fill out all cipher fields.');
-                return;
-            }
-
-            if(currentPass !== currentUserData.password) {
-                showToast('Current cipher does not match.');
-                return;
-            }
-
-            if(newPass !== confirmPass) {
-                showToast('New ciphers do not match.');
-                return;
-            }
+            if(!currentPass || !newPass || !confirmPass) { showToast('Please fill out all cipher fields.'); return; }
+            if(currentPass !== currentUserData.password) { showToast('Current cipher does not match.'); return; }
+            if(newPass !== confirmPass) { showToast('New ciphers do not match.'); return; }
 
             try {
                 await db.collection('users').doc(currentUserData.uid).update({ password: newPass });
@@ -1130,9 +964,7 @@
             event.target.classList.add('active');
         }
 
-        function openAiTerminalTab() {
-            switchTab('ai');
-        }
+        function openAiTerminalTab() { switchTab('ai'); }
 
         function initRealtimeListeners() {
             db.collection('users').onSnapshot(snap => {
@@ -1156,7 +988,7 @@
                 renderHeatmap();
             });
 
-            // FIXED: Live global chat messages listener popping up instantly
+            // FIXED: Real-time global chat listener keeping instant sync across clients
             db.collection('global_chat').orderBy('createdAt', 'asc').onSnapshot(snap => {
                 chatCache = [];
                 snap.forEach(doc => chatCache.push({ id: doc.id, ...doc.data() }));
@@ -1185,12 +1017,19 @@
             });
 
             db.collection('custom_badges').onSnapshot(snap => {
+                badgesCache = [];
                 const bBody = document.getElementById('badge-table-body');
+                const badgeSelect = document.getElementById('promo-badge-select');
                 bBody.innerHTML = '';
+                badgeSelect.innerHTML = '<option value="">-- No Badge Reward --</option>';
+
                 snap.forEach(doc => {
-                    const b = doc.id;
+                    const bId = doc.id;
                     const d = doc.data();
-                    bBody.innerHTML += `<tr><td><b>${d.name}</b></td><td>${d.icon}</td><td><span style="color:${d.color}">${d.color}</span></td><td><button class="btn btn-secondary btn-sm" onclick="deleteBadge('${b}')">Delete</button></td></tr>`;
+                    badgesCache.push({ id: bId, ...d });
+
+                    bBody.innerHTML += `<tr><td><b>${d.name}</b></td><td>${d.icon}</td><td><span style="color:${d.color}">${d.color}</span></td><td><button class="btn btn-secondary btn-sm" onclick="deleteBadge('${bId}')">Delete</button></td></tr>`;
+                    badgeSelect.innerHTML += `<option value="${bId}">${d.icon} ${d.name} (${bId})</option>`;
                 });
             });
 
@@ -1245,7 +1084,7 @@
             }
         }
 
-        // --- Enhanced Global Chat Logic (Sender Name, Message Replies, Typing Input) ---
+        // --- ENHANCED & SYNCHRONIZED GLOBAL CHAT LOGIC ---
         function renderGlobalChatUI() {
             const container = document.getElementById('globalChatMessages');
             if(!container) return;
@@ -1272,8 +1111,10 @@
                     ${replyQuoteHtml}
                     <div class="chat-msg-sender">@${escapeHtml(msg.username || 'anonymous')}</div>
                     <div class="chat-msg-text">${escapeHtml(msg.text || '')}</div>
-                    <button class="chat-reply-trigger" onclick="initiateChatReply('${msg.id}', '${escapeHtml(msg.username || 'anonymous')}', '${escapeHtml(msg.text || '')}')">Reply</button>
-                    <button class="chat-reply-trigger" style="color:var(--neon-pink); margin-left: 10px;" onclick="deleteChatMessage('${msg.id}')">Delete</button>
+                    <div style="display:flex; gap:12px; margin-top:4px;">
+                        <button class="chat-reply-trigger" onclick="initiateChatReply('${msg.id}', '${escapeHtml(msg.username || 'anonymous')}', '${escapeHtml(msg.text || '')}')">Reply</button>
+                        <button class="chat-reply-trigger" style="color:var(--neon-pink);" onclick="deleteChatMessage('${msg.id}')">Delete</button>
+                    </div>
                 `;
                 container.appendChild(card);
             });
@@ -1319,9 +1160,7 @@
         }
 
         function handleChatKeyPress(event) {
-            if(event.key === 'Enter') {
-                sendGlobalChatMessage();
-            }
+            if(event.key === 'Enter') { sendGlobalChatMessage(); }
         }
 
         async function deleteChatMessage(msgId) {
@@ -1372,12 +1211,8 @@
             });
         }
 
-        function openLiveBroadcastModal() {
-            document.getElementById('live-broadcast-modal').style.display = 'flex';
-        }
-        function closeLiveBroadcastModal() {
-            document.getElementById('live-broadcast-modal').style.display = 'none';
-        }
+        function openLiveBroadcastModal() { document.getElementById('live-broadcast-modal').style.display = 'flex'; }
+        function closeLiveBroadcastModal() { document.getElementById('live-broadcast-modal').style.display = 'none'; }
 
         async function submitLiveBroadcastModal() {
             const title = document.getElementById('modal-stream-title').value.trim();
@@ -1388,7 +1223,7 @@
                 title, host: host || 'Ferni1', url: url || 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4', createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
             logAction(`Launched broadcast: "${title}"`);
-            showToast('Live stream started and broadcasted to users!');
+            showToast('Live stream started and broadcasted!');
             closeLiveBroadcastModal();
         }
 
@@ -1424,24 +1259,20 @@
         }
 
         async function runAiScanNow() {
-            logAi('Scanning all active posts and user bios for policy violations...');
+            logAi('Scanning active posts and user records for anomalies...');
             setTimeout(() => {
                 logAi(`Scan complete. Analyzed ${postsCache.length} posts and ${usersCache.length} user records. 0 threats detected.`);
                 showToast('Neural deep scan finished successfully!');
             }, 1200);
         }
 
-        function openLookupModalPrompt() {
-            document.getElementById('lookup-modal').style.display = 'flex';
-        }
+        function openLookupModalPrompt() { document.getElementById('lookup-modal').style.display = 'flex'; }
         function openLookupModalForUser(username) {
             document.getElementById('lookup-input-query').value = username;
             document.getElementById('lookup-modal').style.display = 'flex';
             executeUserLookup();
         }
-        function closeLookupModal() {
-            document.getElementById('lookup-modal').style.display = 'none';
-        }
+        function closeLookupModal() { document.getElementById('lookup-modal').style.display = 'none'; }
 
         async function executeUserLookup() {
             const query = document.getElementById('lookup-input-query').value.trim().toLowerCase();
@@ -1454,16 +1285,13 @@
             }
 
             let foundUser = usersCache.find(u => u.id === query || (u.username && u.username.toLowerCase() === query));
-
             if(!foundUser) {
                 try {
                     const snap = await db.collection('usernames').doc(query).get();
                     if(snap.exists) {
                         const uid = snap.data().uid;
                         const userDoc = await db.collection('users').doc(uid).get();
-                        if(userDoc.exists) {
-                            foundUser = { id: userDoc.id, ...userDoc.data() };
-                        }
+                        if(userDoc.exists) { foundUser = { id: userDoc.id, ...userDoc.data() }; }
                     }
                 } catch(e) { console.error(e); }
             }
@@ -1473,21 +1301,12 @@
                 return;
             }
 
-            let html = `
-                <div class="glass-cyber" style="padding: 20px; display: flex; flex-direction: column; gap: 10px; border-color: var(--border-glow);">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h4 style="font-family:'Orbitron',sans-serif; color:var(--neon-cyan); font-size:15px; font-weight:900;">@${foundUser.username || 'unknown'}</h4>
-                        <button class="btn btn-secondary btn-sm" onclick="openUserModal('${foundUser.id}')">Manage Account</button>
-                    </div>
-            `;
+            let html = `<div class="glass-cyber" style="padding: 20px; display: flex; flex-direction: column; gap: 10px; border-color: var(--border-glow);"><div style="display:flex; justify-content:space-between; align-items:center;"><h4 style="font-family:'Orbitron',sans-serif; color:var(--neon-cyan); font-size:15px; font-weight:900;">@${foundUser.username || 'unknown'}</h4><button class="btn btn-secondary btn-sm" onclick="openUserModal('${foundUser.id}')">Manage Account</button></div>`;
 
             for(const [key, val] of Object.entries(foundUser)) {
                 let displayVal = val;
-                if(typeof val === 'object' && val !== null && val.toDate) {
-                    displayVal = val.toDate().toLocaleString();
-                } else if(typeof val === 'object') {
-                    displayVal = JSON.stringify(val);
-                }
+                if(typeof val === 'object' && val !== null && val.toDate) { displayVal = val.toDate().toLocaleString(); }
+                else if(typeof val === 'object') { displayVal = JSON.stringify(val); }
                 html += `<div style="display:flex; justify-content:space-between; font-size:12px; border-bottom:1px solid rgba(255,255,255,0.04); padding:6px 0;"><span style="color:var(--text-sub);font-weight:600;">${key}</span><span style="color:#fff; text-align:right; max-width:60%; word-break:break-all; font-family:'JetBrains Mono',monospace;">${displayVal}</span></div>`;
             }
 
@@ -1610,20 +1429,42 @@
             showToast('Badge deleted');
         }
 
+        // --- ENHANCED PROMO CODE LOGIC WITH BADGE REWARDS ---
         async function createPromoCode() {
             const code = document.getElementById('promo-code-text').value.trim().toUpperCase();
             const coins = parseInt(document.getElementById('promo-coins').value) || 0;
+            const badgeReward = document.getElementById('promo-badge-select').value;
+
             if(!code) { showToast('Enter voucher code text'); return; }
-            await db.collection('promo_codes').doc(code).set({ code, coins, usedCount: 0 });
-            logAction(`Generated promo code: ${code} (${coins} coins)`);
-            showToast('Voucher deployed');
+            
+            await db.collection('promo_codes').doc(code).set({
+                code,
+                coins,
+                badgeReward: badgeReward || null,
+                usedCount: 0
+            });
+
+            logAction(`Generated voucher code: ${code} (${coins} coins, Badge: ${badgeReward || 'None'})`);
+            showToast('Voucher with cool badge reward deployed!');
+            document.getElementById('promo-code-text').value = '';
+            document.getElementById('promo-coins').value = '';
+            document.getElementById('promo-badge-select').value = '';
         }
 
         function renderPromoTable() {
             const tbody = document.getElementById('promo-table-body');
             tbody.innerHTML = '';
             promosCache.forEach(p => {
-                tbody.innerHTML += `<tr><td><b>${p.code}</b></td><td>${p.coins}</td><td>${p.usedCount || 0}</td><td><button class="btn btn-danger btn-sm" onclick="deletePromo('${p.id}')">Delete</button></td></tr>`;
+                const badgeDisplay = p.badgeReward ? `<span class="badge-pill" style="color:var(--neon-amber);">${p.badgeReward}</span>` : '<span style="color:var(--text-sub);">None</span>';
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>${p.code}</b></td>
+                        <td>${p.coins || 0} Coins</td>
+                        <td>${badgeDisplay}</td>
+                        <td>${p.usedCount || 0}</td>
+                        <td><button class="btn btn-danger btn-sm" onclick="deletePromo('${p.id}')">Delete</button></td>
+                    </tr>
+                `;
             });
         }
 
