@@ -297,17 +297,19 @@
         <source src="https://actions.google.com/sounds/v1/ui/button_click.ogg" type="audio/ogg">
     </audio>
 
-    <!-- ADMIN PANEL LOCKDOWN OVERLAY -->
-    <div id="admin-lockdown-overlay" style="display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.96); backdrop-filter: blur(20px); z-index: 99999; flex-direction: column; align-items: center; justify-content: center; font-family: 'Orbitron', sans-serif; color: var(--neon-pink); text-align: center; padding: 20px;">
-        <div class="glass-cyber auth-card" style="max-width: 480px; padding: 48px; display: flex; flex-direction: column; gap: 22px; border: 1px solid rgba(255, 0, 127, 0.5);">
-            <div style="font-size: 48px; margin-bottom: -10px;">🛡️</div>
-            <h1 style="color: var(--neon-pink); font-size: 22px;">Admin Lockdown Active</h1>
-            <p style="color: var(--text-sub); font-size: 11px;">The admin command core is securely locked down. Enter master override code to restore access.</p>
-            <div class="input-group" style="text-align: left;">
-                <label>Deactivation Cipher</label>
-                <input type="password" id="lockdown-unlock-code" class="input" placeholder="Enter override code...">
+    <!-- FIRESTORE GLOBAL LOCKDOWN OVERLAY (Revamped to Owner Vault Theme) -->
+    <div id="lockdown-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at center, #0f172a 0%, #020617 100%); color: #ffffff; z-index: 99999; text-align: center; padding-top: 20vh; box-sizing: border-box; backdrop-filter: blur(20px);">
+        <div class="glass-cyber" style="max-width: 600px; margin: 0 auto; padding: 48px; border-color: rgba(255, 183, 3, 0.4); box-shadow: 0 0 80px rgba(255, 183, 3, 0.2);">
+            <div class="brand-logo" style="width: 72px; height: 72px; margin: 0 auto 20px auto; background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); font-size: 28px; color: #fff;">🔒</div>
+            <h1 style="color: var(--neon-amber); font-size: 2.2rem; margin-bottom: 12px; font-family: 'Orbitron', sans-serif; letter-spacing: 2px;">OWNER VAULT SECURED</h1>
+            <p style="color: var(--text-sub); font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">System-wide lockdown protocol active across all connected nodes.</p>
+            <p style="font-size: 12px; color: var(--text-main); margin-bottom: 25px;">Enter the Master Owner Key to bypass security and unlock the matrix:</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+                <input type="password" id="password-input" class="input" style="width: 100%; max-width: 360px; text-align: center; letter-spacing: 3px;" placeholder="ENTER MASTER CIPHER">
+                <button class="btn btn-primary" onclick="handleUnlockAttempt()" style="width: 100%; max-width: 360px; background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); color: #fff;">Unlock Owner Vault</button>
             </div>
-            <button class="btn btn-danger" onclick="attemptDeactivateLockdown()">Deauthorize Lockdown</button>
+            <div id="error-msg" style="color: var(--neon-pink); margin-top: 15px; display: none; font-size: 11px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">ACCESS DENIED: INVALID MASTER KEY</div>
         </div>
     </div>
 
@@ -381,6 +383,7 @@
                     <div class="stat-card glass-cyber"><span class="val" id="stat-coins">0</span><span class="lbl">Total Coin Supply</span></div>
                     <div class="stat-card glass-cyber"><span class="val" id="stat-reports">0</span><span class="lbl">Open Reports</span></div>
                 </div>
+
                 <div class="grid-2">
                     <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 16px;">
                         <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Real-Time Activity Matrix</h3>
@@ -584,14 +587,6 @@
                 <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 20px; max-width: 680px;">
                     <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Global Matrix Parameters</h3>
                     
-                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255, 0, 127, 0.05); padding: 14px; border: 1px solid rgba(255, 0, 127, 0.2); border-radius: 12px;">
-                        <div>
-                            <span style="font-weight: bold; color: var(--neon-pink);">🛡️ Master Admin Panel Lockdown</span>
-                            <p style="font-size: 11px; color: var(--text-sub);">Locks down the entire admin panel and requires a code to unlock.</p>
-                        </div>
-                        <input type="checkbox" id="setting-lockdown-master" style="width: 22px; height: 22px; accent-color: var(--neon-pink); cursor: pointer;" onchange="toggleMasterLockdown(this.checked)">
-                    </div>
-
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span>New User Registrations Active</span>
                         <input type="checkbox" id="setting-reg" style="width: 20px; height: 20px; accent-color: var(--neon-cyan); cursor: pointer;" onchange="updateSystemSetting('registrationOpen', this.checked)">
@@ -614,22 +609,38 @@
                 </div>
             </div>
 
-            <!-- TAB: OWNER -->
+            <!-- TAB: OWNER VAULT (ENHANCED UI WITH LOCKDOWN BUTTON & POPUP MODAL) -->
             <div id="tab-owner" class="tab-pane">
-                <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 18px; max-width: 720px;">
-                    <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-amber); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Sovereign Owner Master Vault</h3>
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <div class="glass-cyber" style="padding: 32px; display: flex; flex-direction: column; gap: 24px; max-width: 840px; border-color: rgba(255, 183, 3, 0.4); box-shadow: 0 0 50px rgba(255, 183, 3, 0.15);">
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div class="brand-logo" style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); font-size: 24px; color: #fff;">🛡️</div>
+                        <div>
+                            <h3 style="font-family: 'Orbitron', sans-serif; font-size: 14px; color: var(--neon-amber); text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">Sovereign Owner Master Vault</h3>
+                            <div id="connection-status" style="font-size: 11px; color: var(--neon-lime); font-family: 'JetBrains Mono', monospace; margin-top: 4px;">Status: Connected to Firestore ✓</div>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Lockdown Control Box inside Vault -->
+                    <div style="background: rgba(255, 183, 3, 0.04); border: 1px solid rgba(255, 183, 3, 0.25); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                            <div>
+                                <h4 style="font-family: 'Orbitron', sans-serif; font-size: 11px; color: var(--neon-amber); text-transform: uppercase; letter-spacing: 1.5px;">Matrix Security Lockdown</h4>
+                                <p style="font-size: 12px; color: var(--text-sub); margin-top: 2px;">Immediately engages emergency lockdown protocol across all synced client terminals.</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="openLockdownModal()" style="background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); color: #fff; padding: 12px 24px;">🔒 Trigger Lockdown</button>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
                         <button class="btn btn-secondary" onclick="coinSinkTax()">Apply 10% Wealth Tax (>100 Coins)</button>
                         <button class="btn btn-secondary" onclick="coinSinkDividend()">Execute +100 Coin Dividend</button>
-                    </div>
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                         <button class="btn btn-secondary" onclick="bulkCoinGivePrompt()">Bulk Distribute Coins</button>
                         <button class="btn btn-danger" onclick="purgeGlobalChat()">Wipe Entire Global Chat</button>
-                    </div>
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                         <button class="btn btn-danger" onclick="wipeAllPosts()">Purge All Network Posts</button>
                         <button class="btn btn-danger" onclick="resetAllCoins()">Reset All Wallets to 100</button>
-                        <button class="btn btn-danger" onclick="factoryResetDatabase()">⚠️ Factory Reset Matrix State</button>
+                    </div>
+                    <div>
+                        <button class="btn btn-danger" onclick="factoryResetDatabase()" style="width: 100%;">⚠️ Factory Reset Matrix State</button>
                     </div>
                 </div>
             </div>
@@ -642,6 +653,25 @@
     </div>
 
     <!-- Modals -->
+    <!-- Lockdown Confirmation / Popup Modal -->
+    <div class="modal-overlay" id="vault-lockdown-popup">
+        <div class="modal glass-cyber" style="max-width: 520px; border-color: rgba(255, 183, 3, 0.5); box-shadow: 0 0 60px rgba(255, 183, 3, 0.25);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-amber); font-size: 15px; font-weight: 900; letter-spacing: 1.5px;">⚡ CONFIRM SYSTEM LOCKDOWN</h3>
+                <button class="btn btn-secondary btn-sm" onclick="closeLockdownModal()">✕ Close</button>
+            </div>
+            <p style="font-size: 13px; color: var(--text-sub); line-height: 1.5;">Are you sure you want to lock down the entire network? All connected interfaces will be instantly intercepted and secured behind the Master Vault cipher gate.</p>
+            <div style="background: rgba(2, 6, 23, 0.6); padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(255, 183, 3, 0.2);">
+                <span style="font-size: 11px; font-family: 'Orbitron', sans-serif; color: var(--neon-amber); text-transform: uppercase;">Unlock Password:</span>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #fff; margin-top: 4px; letter-spacing: 2px;">AIMEISPRO</div>
+            </div>
+            <div style="display: flex; gap: 12px; margin-top: 4px;">
+                <button class="btn btn-secondary" onclick="closeLockdownModal()" style="flex: 1;">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmAndActivateLockdown()" style="flex: 1; background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); color: #fff;">Engage Lockdown</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="live-broadcast-modal">
         <div class="modal glass-cyber">
             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -755,8 +785,8 @@
         const db = firebase.firestore();
         const rtdb = firebase.database();
 
-        const lockdownRef = rtdb.ref('school_social_app/settings/lockdown');
-        const UNLOCK_CODE = "AIMEISPRO:)";
+        // Firestore Document Reference for Lockdown: collection "config", document "appSettings"
+        const settingsRef = db.collection('config').doc('appSettings');
 
         let currentUserData = null;
         let selectedUserId = null;
@@ -967,6 +997,51 @@
         function openAiTerminalTab() { switchTab('ai'); }
 
         function initRealtimeListeners() {
+            // Initialize Firestore settings document with default values and unlockPassword set to "AIMEISPRO"
+            settingsRef.get().then((doc) => {
+                if (!doc.exists) {
+                    settingsRef.set({
+                        lockdown: false,
+                        unlockPassword: "AIMEISPRO"
+                    });
+                } else {
+                    // Ensure unlockPassword is set to AIMEISPRO as requested
+                    settingsRef.update({ unlockPassword: "AIMEISPRO" }).catch(() => {});
+                }
+            }).catch((err) => console.error("Error checking doc:", err));
+
+            // Real-Time Firestore Listener for Global Lockdown
+            const statusDiv = document.getElementById('connection-status');
+            const lockdownOverlay = document.getElementById('lockdown-overlay');
+            const errorMsg = document.getElementById('error-msg');
+            const passwordInput = document.getElementById('password-input');
+
+            settingsRef.onSnapshot((doc) => {
+                if (doc.exists) {
+                    if (statusDiv) {
+                        statusDiv.style.color = 'var(--neon-lime)';
+                        statusDiv.innerText = 'Status: Connected to Firestore ✓';
+                    }
+
+                    const data = doc.data();
+                    const isLocked = data.lockdown;
+
+                    if (isLocked === true) {
+                        lockdownOverlay.style.display = 'block';
+                    } else {
+                        lockdownOverlay.style.display = 'none';
+                        if (errorMsg) errorMsg.style.display = 'none';
+                        if (passwordInput) passwordInput.value = '';
+                    }
+                }
+            }, (error) => {
+                if (statusDiv) {
+                    statusDiv.style.color = 'var(--neon-pink)';
+                    statusDiv.innerText = 'Status: Firestore Connection Error';
+                }
+                console.error("Firestore snapshot error:", error);
+            });
+
             db.collection('users').onSnapshot(snap => {
                 usersCache = [];
                 let totalCoins = 0;
@@ -988,7 +1063,6 @@
                 renderHeatmap();
             });
 
-            // FIXED: Real-time global chat listener keeping instant sync across clients
             db.collection('global_chat').orderBy('createdAt', 'asc').onSnapshot(snap => {
                 chatCache = [];
                 snap.forEach(doc => chatCache.push({ id: doc.id, ...doc.data() }));
@@ -1044,44 +1118,59 @@
                     }
                 }
             });
+        }
 
-            lockdownRef.on('value', (snapshot) => {
-                const isLocked = snapshot.val() === true;
-                const toggle = document.getElementById('setting-lockdown-master');
-                if (toggle) toggle.checked = isLocked;
+        // --- Lockdown Modal Controls ---
+        function openLockdownModal() {
+            document.getElementById('vault-lockdown-popup').style.display = 'flex';
+        }
 
-                const overlay = document.getElementById('admin-lockdown-overlay');
-                if (overlay) {
-                    overlay.style.display = isLocked ? 'flex' : 'none';
+        function closeLockdownModal() {
+            document.getElementById('vault-lockdown-popup').style.display = 'none';
+        }
+
+        function confirmAndActivateLockdown() {
+            closeLockdownModal();
+            activateLockdown();
+        }
+
+        // --- Owner Vault lockdown activation ---
+        function activateLockdown() {
+            settingsRef.update({ lockdown: true, unlockPassword: "AIMEISPRO" })
+                .then(() => {
+                    logAction("Owner Vault lockdown activated!");
+                    showToast("Owner Vault lockdown activated!");
+                })
+                .catch((error) => {
+                    alert("Write failed! Check your Firestore Security Rules: " + error.message);
+                });
+        }
+
+        // --- User function to check password and lift lockdown globally ---
+        function handleUnlockAttempt() {
+            const enteredValue = document.getElementById('password-input').value;
+            const errorMsg = document.getElementById('error-msg');
+
+            settingsRef.get().then((doc) => {
+                if (doc.exists) {
+                    const correctPassword = doc.data().unlockPassword || "AIMEISPRO";
+
+                    if (enteredValue === correctPassword) {
+                        settingsRef.update({ lockdown: false })
+                            .then(() => {
+                                logAction("Owner Vault unlocked globally!");
+                                showToast("Owner Vault unlocked globally!");
+                            })
+                            .catch((error) => {
+                                console.error("Unlock update failed:", error);
+                            });
+                    } else {
+                        errorMsg.style.display = 'block';
+                    }
                 }
+            }).catch((error) => {
+                console.error("Error verifying password:", error);
             });
-        }
-
-        async function toggleMasterLockdown(state) {
-            try {
-                await lockdownRef.set(state);
-                logAction(`Master lockdown state updated to: ${state}`);
-                showToast(`Admin Lockdown ${state ? 'ACTIVATED' : 'DEACTIVATED'}!`);
-            } catch(e) {
-                console.error(e);
-                showToast('Failed to update lockdown state');
-            }
-        }
-
-        async function attemptDeactivateLockdown() {
-            const enteredCode = document.getElementById('lockdown-unlock-code').value.trim();
-            if (enteredCode === UNLOCK_CODE) {
-                try {
-                    await lockdownRef.set(false);
-                    document.getElementById('lockdown-unlock-code').value = '';
-                    showToast('Admin Lockdown Deactivated Successfully!');
-                } catch(e) {
-                    console.error(e);
-                    showToast('Database error disabling lockdown');
-                }
-            } else {
-                showToast('Incorrect deactivation code!');
-            }
         }
 
         // --- ENHANCED & SYNCHRONIZED GLOBAL CHAT LOGIC ---
@@ -1429,7 +1518,6 @@
             showToast('Badge deleted');
         }
 
-        // --- ENHANCED PROMO CODE LOGIC WITH BADGE REWARDS ---
         async function createPromoCode() {
             const code = document.getElementById('promo-code-text').value.trim().toUpperCase();
             const coins = parseInt(document.getElementById('promo-coins').value) || 0;
