@@ -1332,16 +1332,20 @@
                 if (msg.replyTo) {
                     const originalMsg = chatCache.find(m => m.id === msg.replyTo);
                     if (originalMsg) {
-                        replyQuoteHtml = `<div class="chat-msg-quote">Replying to <b>@${originalMsg.username || 'unknown'}</b>: ${escapeHtml(originalMsg.text || '')}</div>`;
+                        replyQuoteHtml = `<div class="chat-msg-quote">Replying to <b>@${originalMsg.username || originalMsg.sender || 'unknown'}</b>: ${escapeHtml(originalMsg.text || originalMsg.message || '')}</div>`;
                     }
                 }
 
+                // Support both schema naming conventions (username/sender, text/message) to maintain cross-website compatibility
+                const senderName = msg.username || msg.sender || msg.name || 'Anonymous';
+                const messageText = msg.text || msg.message || '';
+
                 card.innerHTML = `
                     ${replyQuoteHtml}
-                    <div class="chat-msg-sender">@${escapeHtml(msg.username || 'anonymous')}</div>
-                    <div class="chat-msg-text">${escapeHtml(msg.text || '')}</div>
+                    <div class="chat-msg-sender">@${escapeHtml(senderName)}</div>
+                    <div class="chat-msg-text">${escapeHtml(messageText)}</div>
                     <div style="display:flex; gap:10px; margin-top:4px;">
-                        <button class="chat-reply-trigger" onclick="initiateChatReply('${msg.id}', '${escapeHtml(msg.username || 'anonymous')}', '${escapeHtml(msg.text || '')}')">Reply</button>
+                        <button class="chat-reply-trigger" onclick="initiateChatReply('${msg.id}', '${escapeHtml(senderName)}', '${escapeHtml(messageText)}')">Reply</button>
                         <button class="chat-reply-trigger" style="color:var(--neon-pink);" onclick="deleteChatMessage('${msg.id}')">Delete</button>
                     </div>
                 `;
@@ -1374,7 +1378,9 @@
             try {
                 await db.collection('global_chat').add({
                     username: senderHandle,
+                    sender: senderHandle, // Populating both fields ensures cross-site compatibility with other client frontends
                     text: textValue,
+                    message: textValue,  // Populating both fields ensures compatibility with external web apps
                     replyTo: replyingToChatId || null,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
@@ -1404,8 +1410,9 @@
         }
 
         function escapeHtml(text) {
+            if(!text) return '';
             const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+            return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
         }
 
         function renderUserTable() {
