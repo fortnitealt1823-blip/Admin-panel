@@ -9,6 +9,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- Chart.js for Realistic Live Telemetry Graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
 
@@ -18,18 +20,18 @@
             --neon-pink: #ff007f;
             --neon-lime: #39ff14;
             --neon-amber: #ffb703;
-            --bg-void: #020617;
-            --bg-deep: #070b19;
-            --bg-card: rgba(11, 19, 38, 0.88);
-            --bg-input: rgba(19, 28, 48, 0.8);
-            --border-cyber: rgba(0, 240, 255, 0.3);
-            --border-glow: rgba(0, 240, 255, 0.7);
+            --bg-void: #010409;
+            --bg-deep: #060913;
+            --bg-card: rgba(8, 14, 30, 0.92);
+            --bg-input: rgba(14, 22, 40, 0.85);
+            --border-cyber: rgba(0, 240, 255, 0.25);
+            --border-glow: rgba(0, 240, 255, 0.6);
             --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --radius-cyber: 16px;
-            --radius-lg: 26px;
-            --shadow-cyber: 0 0 40px -5px rgba(0, 240, 255, 0.25);
-            --shadow-intense: 0 0 60px -5px rgba(176, 38, 255, 0.35);
+            --text-sub: #8892b0;
+            --radius-cyber: 14px;
+            --radius-lg: 22px;
+            --shadow-cyber: 0 0 35px -5px rgba(0, 240, 255, 0.2);
+            --shadow-intense: 0 0 50px -5px rgba(176, 38, 255, 0.3);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -45,40 +47,41 @@
             overflow-x: hidden;
         }
 
+        /* Database Grid Background Matrix */
         body::before {
             content: "";
             position: fixed; inset: 0;
             background-image: 
-                linear-gradient(to right, rgba(0, 240, 255, 0.04) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
-            background-size: 45px 45px;
+                linear-gradient(to right, rgba(0, 240, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 240, 255, 0.025) 1px, transparent 1px);
+            background-size: 30px 30px;
             z-index: -1;
         }
 
-        /* --- IMMERSIVE CYBERNETIC LOADING SCREEN --- */
+        /* --- IMMERSIVE LOADING SCREEN --- */
         #loading-screen {
             position: fixed; inset: 0; background: var(--bg-void); z-index: 999999;
             display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 24px;
             font-family: 'Orbitron', sans-serif; transition: opacity 0.5s ease;
         }
         .loader-core {
-            width: 80px; height: 80px; border: 3px solid rgba(0,240,255,0.2); border-top: 3px solid var(--neon-cyan);
-            border-radius: 50%; animation: spinLoader 1s linear infinite; box-shadow: 0 0 30px rgba(0,240,255,0.4);
+            width: 75px; height: 75px; border: 3px solid rgba(0,240,255,0.15); border-top: 3px solid var(--neon-cyan);
+            border-radius: 50%; animation: spinLoader 0.9s linear infinite; box-shadow: 0 0 25px rgba(0,240,255,0.35);
         }
         @keyframes spinLoader { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .loader-text { color: var(--neon-cyan); font-size: 13px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; }
-        .loader-bar-track { width: 280px; height: 4px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+        .loader-text { color: var(--neon-cyan); font-size: 12px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; }
+        .loader-bar-track { width: 260px; height: 3px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
         .loader-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); transition: width 0.15s ease; }
 
         .container {
-            width: 100%; max-width: 1750px; min-height: 100vh;
-            display: flex; flex-direction: column; padding: 24px; gap: 20px;
+            width: 100%; max-width: 1780px; min-height: 100vh;
+            display: flex; flex-direction: column; padding: 20px; gap: 16px;
         }
 
         .glass-cyber {
             background: var(--bg-card);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border: 1px solid var(--border-cyber);
             border-radius: var(--radius-cyber);
             box-shadow: var(--shadow-cyber);
@@ -89,10 +92,10 @@
         }
 
         .auth-card {
-            width: 100%; max-width: 500px; padding: 52px;
-            display: flex; flex-direction: column; gap: 24px;
+            width: 100%; max-width: 480px; padding: 48px;
+            display: flex; flex-direction: column; gap: 22px;
             box-shadow: var(--shadow-intense);
-            border: 1px solid rgba(176, 38, 255, 0.45);
+            border: 1px solid rgba(176, 38, 255, 0.4);
             position: relative; overflow: hidden;
         }
 
@@ -102,7 +105,7 @@
         }
 
         .auth-card h1 {
-            font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
+            font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900;
             text-align: center; letter-spacing: 1.5px;
             background: linear-gradient(135deg, #fff 30%, var(--neon-cyan));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -110,172 +113,186 @@
         }
 
         .auth-card p {
-            text-align: center; color: var(--text-sub); font-size: 12px;
-            letter-spacing: 1px; margin-top: -12px; text-transform: uppercase;
+            text-align: center; color: var(--text-sub); font-size: 11px;
+            letter-spacing: 1px; margin-top: -10px; text-transform: uppercase;
         }
 
-        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        .input-group { display: flex; flex-direction: column; gap: 6px; }
         .input-group label {
-            font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 700;
+            font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: 700;
             color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px;
         }
 
         .input {
-            width: 100%; padding: 15px 18px; background: var(--bg-input);
-            border: 1px solid rgba(0, 240, 255, 0.25); border-radius: 12px;
-            color: #fff; outline: none; font-size: 14px; font-family: inherit;
+            width: 100%; padding: 13px 16px; background: var(--bg-input);
+            border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 10px;
+            color: #fff; outline: none; font-size: 13px; font-family: inherit;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .input:focus {
             border-color: var(--neon-cyan);
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
-            background: rgba(19, 28, 48, 0.98);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
+            background: rgba(14, 22, 40, 0.98);
         }
 
         .btn {
-            padding: 15px 22px; border: none; border-radius: 12px;
+            padding: 13px 20px; border: none; border-radius: 10px;
             font-family: 'Orbitron', sans-serif; font-weight: 700; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 1.5px; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 1.5px; font-size: 10px;
             transition: all 0.25s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
         }
         .btn:active { transform: scale(0.96); }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-            color: #020617; box-shadow: 0 0 30px rgba(0, 240, 255, 0.45); font-weight: 900;
+            color: #010409; box-shadow: 0 0 25px rgba(0, 240, 255, 0.4); font-weight: 900;
         }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(0, 240, 255, 0.75); filter: brightness(1.1); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 35px rgba(0, 240, 255, 0.7); filter: brightness(1.1); }
 
         .btn-danger {
-            background: rgba(255, 0, 127, 0.15); color: var(--neon-pink); border: 1px solid rgba(255, 0, 127, 0.4);
+            background: rgba(255, 0, 127, 0.12); color: var(--neon-pink); border: 1px solid rgba(255, 0, 127, 0.35);
         }
-        .btn-danger:hover { background: var(--neon-pink); color: #fff; box-shadow: 0 0 25px rgba(255, 0, 127, 0.6); }
+        .btn-danger:hover { background: var(--neon-pink); color: #fff; box-shadow: 0 0 20px rgba(255, 0, 127, 0.5); }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.04); color: var(--text-main); border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03); color: var(--text-main); border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .btn-secondary:hover {
-            background: rgba(0, 240, 255, 0.1); border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 20px rgba(0, 240, 255, 0.25);
+            background: rgba(0, 240, 255, 0.08); border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
         }
-        .btn-sm { padding: 9px 16px; font-size: 9px; letter-spacing: 1px; }
+        .btn-sm { padding: 8px 14px; font-size: 9px; letter-spacing: 1px; }
 
-        #admin-app { display: none; flex-direction: column; flex: 1; gap: 20px; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #admin-app { display: none; flex-direction: column; flex: 1; gap: 16px; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
         header {
-            display: flex; justify-content: space-between; align-items: center; padding: 20px 32px; flex-wrap: wrap; gap: 16px;
+            display: flex; justify-content: space-between; align-items: center; padding: 16px 28px; flex-wrap: wrap; gap: 14px;
         }
-        .brand-area { display: flex; align-items: center; gap: 18px; }
+        .brand-area { display: flex; align-items: center; gap: 16px; }
         .brand-logo {
-            width: 52px; height: 52px; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-            border-radius: 14px; display: flex; align-items: center; justify-content: center;
-            font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 20px; color: #020617;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
+            width: 48px; height: 48px; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 18px; color: #010409;
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
         }
 
-        .nav-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; }
+        .nav-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
         .nav-tab {
-            padding: 13px 20px; background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px;
+            padding: 11px 18px; background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px;
             color: var(--text-sub); font-family: 'Orbitron', sans-serif; font-weight: 700;
-            font-size: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+            font-size: 9px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
             white-space: nowrap; transition: all 0.25s;
         }
-        .nav-tab:hover { color: #fff; background: rgba(0, 240, 255, 0.06); border-color: rgba(0, 240, 255, 0.35); }
-        .nav-tab.active { background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); color: #020617; border-color: transparent; box-shadow: 0 0 30px rgba(0, 240, 255, 0.6); font-weight: 900; }
+        .nav-tab:hover { color: #fff; background: rgba(0, 240, 255, 0.05); border-color: rgba(0, 240, 255, 0.3); }
+        .nav-tab.active { background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); color: #010409; border-color: transparent; box-shadow: 0 0 25px rgba(0, 240, 255, 0.5); font-weight: 900; }
 
-        .tab-pane { display: none; flex-direction: column; gap: 20px; flex: 1; }
+        .tab-pane { display: none; flex-direction: column; gap: 16px; flex: 1; }
         .tab-pane.active { display: flex; }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+        /* --- REALISTIC DATABASE & ANALYTICS WIDGETS --- */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
         .stat-card {
-            padding: 26px; display: flex; flex-direction: column; gap: 8px; position: relative; overflow: hidden;
+            padding: 22px; display: flex; flex-direction: column; gap: 6px; position: relative; overflow: hidden;
             transition: transform 0.25s, border-color 0.25s;
         }
-        .stat-card:hover { transform: translateY(-3px); border-color: var(--neon-cyan); box-shadow: 0 0 35px rgba(0, 240, 255, 0.35); }
-        .stat-card .val { font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: var(--neon-cyan); letter-spacing: -1px; }
-        .stat-card .lbl { font-family: 'Orbitron', sans-serif; font-size: 9px; color: var(--text-sub); text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px; }
+        .stat-card:hover { transform: translateY(-2px); border-color: var(--neon-cyan); box-shadow: 0 0 30px rgba(0, 240, 255, 0.3); }
+        .stat-card .val { font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 900; color: var(--neon-cyan); letter-spacing: -1px; }
+        .stat-card .lbl { font-family: 'Orbitron', sans-serif; font-size: 8px; color: var(--text-sub); text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px; }
 
-        .data-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
-        .data-table th, .data-table td { padding: 18px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
-        .data-table th { 
-            font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 9px; 
-            text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; background: rgba(0, 240, 255, 0.04);
+        /* Database Node Cluster Metrics */
+        .db-status-bar {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
         }
-        .data-table tr:hover td { background: rgba(0, 240, 255, 0.025); }
-        .table-container { overflow-x: auto; max-height: 540px; overflow-y: auto; }
+        @media(max-width: 1200px) { .db-status-bar { grid-template-columns: repeat(2, 1fr); } }
+        
+        .db-node-box {
+            padding: 18px 22px; display: flex; flex-direction: column; gap: 8px;
+            background: linear-gradient(135deg, rgba(8,14,30,0.95), rgba(4,8,18,0.98));
+            border-left: 3px solid var(--neon-cyan);
+            font-family: 'JetBrains Mono', monospace; font-size: 11px;
+        }
+
+        .data-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; font-family: 'JetBrains Mono', monospace; }
+        .data-table th, .data-table td { padding: 14px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .data-table th { 
+            font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 8px; 
+            text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; background: rgba(0, 240, 255, 0.03);
+        }
+        .data-table tr:hover td { background: rgba(0, 240, 255, 0.02); }
+        .table-container { overflow-x: auto; max-height: 520px; overflow-y: auto; }
 
         .terminal {
-            background: #010409; border: 1px solid rgba(0, 240, 255, 0.25); border-radius: 14px; padding: 18px;
-            font-family: 'JetBrains Mono', monospace; font-size: 11px; height: 140px; overflow-y: auto;
-            color: var(--neon-lime); display: flex; flex-direction: column; gap: 6px; box-shadow: inset 0 2px 20px rgba(0,0,0,0.9);
+            background: #000205; border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 12px; padding: 16px;
+            font-family: 'JetBrains Mono', monospace; font-size: 11px; height: 130px; overflow-y: auto;
+            color: var(--neon-lime); display: flex; flex-direction: column; gap: 5px; box-shadow: inset 0 2px 15px rgba(0,0,0,0.95);
         }
 
         .modal-overlay {
-            position: fixed; inset: 0; background: rgba(2, 6, 23, 0.9);
+            position: fixed; inset: 0; background: rgba(1, 4, 9, 0.88);
             display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px;
-            backdrop-filter: blur(18px); animation: fadeIn 0.2s ease;
+            backdrop-filter: blur(16px); animation: fadeIn 0.2s ease;
         }
         .modal {
             background: var(--bg-deep); border: 1px solid var(--border-cyber); border-radius: var(--radius-lg);
-            width: 100%; max-width: 700px; padding: 40px; display: flex; flex-direction: column; gap: 22px;
-            max-height: 90vh; overflow-y: auto; box-shadow: 0 0 70px rgba(0, 240, 255, 0.3);
+            width: 100%; max-width: 680px; padding: 36px; display: flex; flex-direction: column; gap: 20px;
+            max-height: 90vh; overflow-y: auto; box-shadow: 0 0 60px rgba(0, 240, 255, 0.25);
         }
 
         .toast {
-            position: fixed; bottom: 30px; right: 30px; background: #0b1326; border: 1px solid var(--neon-cyan);
-            padding: 16px 28px; border-radius: 14px; font-size: 12px; font-weight: 700; z-index: 2000;
-            box-shadow: 0 0 40px rgba(0, 240, 255, 0.4); animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            display: flex; align-items: center; gap: 12px; color: #fff; font-family: 'Orbitron', sans-serif; letter-spacing: 0.5px;
+            position: fixed; bottom: 25px; right: 25px; background: #080e1e; border: 1px solid var(--neon-cyan);
+            padding: 14px 24px; border-radius: 12px; font-size: 11px; font-weight: 700; z-index: 2000;
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.35); animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; align-items: center; gap: 10px; color: #fff; font-family: 'Orbitron', sans-serif; letter-spacing: 0.5px;
         }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
         .badge-pill {
-            padding: 5px 14px; background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.35);
-            border-radius: 20px; color: var(--neon-cyan); font-family: 'Orbitron', sans-serif; font-size: 9px;
+            padding: 4px 12px; background: rgba(0, 240, 255, 0.08); border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 16px; color: var(--neon-cyan); font-family: 'Orbitron', sans-serif; font-size: 8px;
             font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
         }
 
-        /* --- ENHANCED GLOBAL CHAT STYLING --- */
+        /* --- GLOBAL CHAT STYLING --- */
         .chat-container-box {
-            display: flex; flex-direction: column; height: 520px; border-radius: 14px;
+            display: flex; flex-direction: column; height: 500px; border-radius: 12px;
             overflow: hidden; border: 1px solid var(--border-cyber); background-color: var(--bg-deep);
         }
         .chat-messages-scroll {
-            flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px;
+            flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px;
         }
         .chat-msg-card {
-            background: rgba(19, 28, 48, 0.6); padding: 14px 18px; border-radius: 12px;
+            background: rgba(14, 22, 40, 0.55); padding: 12px 16px; border-radius: 10px;
             position: relative; max-width: 85%; border-left: 3px solid var(--neon-cyan);
-            border: 1px solid rgba(0, 240, 255, 0.15); animation: fadeInMsg 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(0, 240, 255, 0.12); animation: fadeInMsg 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        @keyframes fadeInMsg { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInMsg { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .chat-msg-sender {
             font-family: 'Orbitron', sans-serif; font-weight: 700; color: var(--neon-cyan);
-            font-size: 10px; margin-bottom: 4px; letter-spacing: 1px; text-transform: uppercase;
+            font-size: 9px; margin-bottom: 3px; letter-spacing: 1px; text-transform: uppercase;
         }
-        .chat-msg-text { font-size: 13px; word-break: break-word; color: var(--text-main); line-height: 1.4; }
+        .chat-msg-text { font-size: 12px; word-break: break-word; color: var(--text-main); line-height: 1.4; font-family: 'JetBrains Mono', monospace; }
         .chat-msg-quote {
-            font-size: 11px; background: rgba(0, 240, 255, 0.05); padding: 6px 12px;
-            border-left: 2px solid var(--neon-purple); margin-bottom: 8px; border-radius: 6px; color: var(--text-sub);
+            font-size: 10px; background: rgba(0, 240, 255, 0.04); padding: 5px 10px;
+            border-left: 2px solid var(--neon-purple); margin-bottom: 6px; border-radius: 4px; color: var(--text-sub);
         }
         .chat-reply-trigger {
-            background: transparent; color: var(--text-sub); font-size: 10px; padding: 2px 0;
-            margin-top: 8px; cursor: pointer; border: none; font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 1px;
+            background: transparent; color: var(--text-sub); font-size: 9px; padding: 2px 0;
+            margin-top: 6px; cursor: pointer; border: none; font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 1px;
         }
         .chat-reply-trigger:hover { color: var(--neon-cyan); }
         .chat-reply-banner {
-            background: rgba(11, 19, 38, 0.96); padding: 12px 20px; font-size: 12px;
+            background: rgba(8, 14, 30, 0.95); padding: 10px 18px; font-size: 11px;
             display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-cyber);
         }
-        .chat-reply-banner span { color: var(--neon-cyan); font-family: 'Orbitron', sans-serif; font-size: 10px; }
+        .chat-reply-banner span { color: var(--neon-cyan); font-family: 'Orbitron', sans-serif; font-size: 9px; }
         .chat-input-bar {
-            display: flex; padding: 16px; background: var(--bg-card); border-top: 1px solid var(--border-cyber); gap: 14px;
+            display: flex; padding: 14px; background: var(--bg-card); border-top: 1px solid var(--border-cyber); gap: 12px;
         }
 
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
         @media(max-width: 1100px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -283,7 +300,7 @@
     <!-- IMMERSIVE LOADING SCREEN -->
     <div id="loading-screen">
         <div class="loader-core"></div>
-        <div class="loader-text" id="loader-status-text">Initializing Neural Link...</div>
+        <div class="loader-text" id="loader-status-text">Mounting Quantum Database...</div>
         <div class="loader-bar-track">
             <div class="loader-bar-fill" id="loader-progress-bar"></div>
         </div>
@@ -297,19 +314,19 @@
         <source src="https://actions.google.com/sounds/v1/ui/button_click.ogg" type="audio/ogg">
     </audio>
 
-    <!-- FIRESTORE GLOBAL LOCKDOWN OVERLAY (Revamped to Owner Vault Theme) -->
-    <div id="lockdown-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at center, #0f172a 0%, #020617 100%); color: #ffffff; z-index: 99999; text-align: center; padding-top: 20vh; box-sizing: border-box; backdrop-filter: blur(20px);">
-        <div class="glass-cyber" style="max-width: 600px; margin: 0 auto; padding: 48px; border-color: rgba(255, 183, 3, 0.4); box-shadow: 0 0 80px rgba(255, 183, 3, 0.2);">
-            <div class="brand-logo" style="width: 72px; height: 72px; margin: 0 auto 20px auto; background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); font-size: 28px; color: #fff;">🔒</div>
-            <h1 style="color: var(--neon-amber); font-size: 2.2rem; margin-bottom: 12px; font-family: 'Orbitron', sans-serif; letter-spacing: 2px;">OWNER VAULT SECURED</h1>
-            <p style="color: var(--text-sub); font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">System-wide lockdown protocol active across all connected nodes.</p>
-            <p style="font-size: 12px; color: var(--text-main); margin-bottom: 25px;">Enter the Master Owner Key to bypass security and unlock the matrix:</p>
+    <!-- FIRESTORE GLOBAL LOCKDOWN OVERLAY -->
+    <div id="lockdown-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at center, #0b1329 0%, #010409 100%); color: #ffffff; z-index: 99999; text-align: center; padding-top: 20vh; box-sizing: border-box; backdrop-filter: blur(20px);">
+        <div class="glass-cyber" style="max-width: 580px; margin: 0 auto; padding: 44px; border-color: rgba(255, 183, 3, 0.4); box-shadow: 0 0 70px rgba(255, 183, 3, 0.2);">
+            <div class="brand-logo" style="width: 68px; height: 68px; margin: 0 auto 18px auto; background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); font-size: 26px; color: #fff;">🔒</div>
+            <h1 style="color: var(--neon-amber); font-size: 2rem; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 2px;">OWNER VAULT SECURED</h1>
+            <p style="color: var(--text-sub); font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px;">System-wide lockdown protocol active across all connected nodes.</p>
+            <p style="font-size: 11px; color: var(--text-main); margin-bottom: 22px;">Enter the Master Owner Key to bypass security and unlock the matrix:</p>
             
-            <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
-                <input type="password" id="password-input" class="input" style="width: 100%; max-width: 360px; text-align: center; letter-spacing: 3px;" placeholder="ENTER MASTER CIPHER">
-                <button class="btn btn-primary" onclick="handleUnlockAttempt()" style="width: 100%; max-width: 360px; background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); color: #fff;">Unlock Owner Vault</button>
+            <div style="display: flex; flex-direction: column; gap: 14px; align-items: center;">
+                <input type="password" id="password-input" class="input" style="width: 100%; max-width: 340px; text-align: center; letter-spacing: 3px;" placeholder="ENTER MASTER CIPHER">
+                <button class="btn btn-primary" onclick="handleUnlockAttempt()" style="width: 100%; max-width: 340px; background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); color: #fff;">Unlock Owner Vault</button>
             </div>
-            <div id="error-msg" style="color: var(--neon-pink); margin-top: 15px; display: none; font-size: 11px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">ACCESS DENIED: INVALID MASTER KEY</div>
+            <div id="error-msg" style="color: var(--neon-pink); margin-top: 14px; display: none; font-size: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">ACCESS DENIED: INVALID MASTER KEY</div>
         </div>
     </div>
 
@@ -317,11 +334,11 @@
         <!-- Login Screen -->
         <div id="login-screen">
             <div class="auth-card glass-cyber">
-                <div style="display: flex; justify-content: center; margin-bottom: -6px;">
-                    <div class="brand-logo" style="width: 68px; height: 68px; font-size: 26px;">SS</div>
+                <div style="display: flex; justify-content: center; margin-bottom: -4px;">
+                    <div class="brand-logo" style="width: 64px; height: 64px; font-size: 24px;">SS</div>
                 </div>
                 <h1>OP Admin Panel</h1>
-                <p>Command Center</p>
+                <p>Database Kernel v4.8</p>
                 
                 <div class="input-group">
                     <label>Admin Handle</label>
@@ -331,7 +348,7 @@
                     <label>Access Password</label>
                     <input type="password" id="login-pass" class="input" placeholder="••••••••••••">
                 </div>
-                <button class="btn btn-primary" onclick="handleLogin()" style="margin-top: 6px;">Initialize Session</button>
+                <button class="btn btn-primary" onclick="handleLogin()" style="margin-top: 4px;">Initialize Session</button>
             </div>
         </div>
 
@@ -341,18 +358,18 @@
                 <div class="brand-area">
                     <div class="brand-logo">SS</div>
                     <div>
-                        <h2 style="font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900; letter-spacing: 0.5px;">COMMANDS</h2>
-                        <span id="current-admin-badge" style="font-family: 'Orbitron', sans-serif; font-size: 9px; color: var(--neon-cyan); text-transform: uppercase; font-weight: 700; letter-spacing: 1px;"></span>
+                        <h2 style="font-family: 'Orbitron', sans-serif; font-size: 15px; font-weight: 900; letter-spacing: 0.5px;">DATABASE KERNEL</h2>
+                        <span id="current-admin-badge" style="font-family: 'Orbitron', sans-serif; font-size: 8px; color: var(--neon-cyan); text-transform: uppercase; font-weight: 700; letter-spacing: 1px;"></span>
                     </div>
                 </div>
-                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                    <select id="music-track-select" class="input" style="padding: 8px 12px; font-size: 9px; font-family: 'Orbitron', sans-serif; width: 140px;" onchange="changeMusicTrack(this.value)">
+                <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                    <select id="music-track-select" class="input" style="padding: 7px 10px; font-size: 8px; font-family: 'Orbitron', sans-serif; width: 130px;" onchange="changeMusicTrack(this.value)">
                         <option value="https://vgmsite.com/soundtracks/fortnite-battle-royale-ost/jvxrqhzhkq/OG%20Classic%20-%20Lobby%20Music.mp3">🎵 Fortnite OG</option>
                         <option value="https://vgmsite.com/soundtracks/synthwave-radio/synthwave_loop.mp3">🎵 Synthwave Void</option>
                         <option value="https://vgmsite.com/soundtracks/cyberpunk-chill/cyber_chill.mp3">🎵 Cybernetic Chill</option>
                     </select>
                     <button class="btn btn-secondary btn-sm" id="music-toggle-btn" onclick="toggleCustomMusic()">🎵 Music: OFF</button>
-                    <button class="btn btn-primary btn-sm" onclick="openLiveBroadcastModal()">📡 Broadcast Live</button>
+                    <button class="btn btn-primary btn-sm" onclick="openLiveBroadcastModal()">📡 Broadcast</button>
                     <button class="btn btn-secondary btn-sm" onclick="openPasswordModal()">🔒 Pass</button>
                     <button class="btn btn-secondary btn-sm" onclick="openAiTerminalTab()">🤖 AI DEC.</button>
                     <button class="btn btn-danger btn-sm" onclick="handleLogout()">Disconnect</button>
@@ -360,7 +377,7 @@
             </header>
 
             <div class="nav-tabs">
-                <button class="nav-tab active" onclick="switchTab('stats')">Analytics Hub</button>
+                <button class="nav-tab active" onclick="switchTab('stats')">Database & Analytics Hub</button>
                 <button class="nav-tab" onclick="switchTab('users')">User Directory</button>
                 <button class="nav-tab" onclick="switchTab('posts')">Network Feeds</button>
                 <button class="nav-tab" onclick="switchTab('chat')">Global Chat</button>
@@ -373,8 +390,44 @@
                 <button class="nav-tab" id="tab-owner-btn" onclick="switchTab('owner')" style="display:none; color: var(--neon-amber); border-color: rgba(255,183,3,0.4);">Owner Vault</button>
             </div>
 
-            <!-- TAB: STATS -->
+            <!-- TAB: STATS / ADVANCED REAL-TIME DATABASE ANALYTICS -->
             <div id="tab-stats" class="tab-pane active">
+                <!-- Database Node Cluster Live Status Bar -->
+                <div class="db-status-bar">
+                    <div class="db-node-box glass-cyber">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:var(--text-sub);">NODE CLUSTER 01</span>
+                            <span style="color:var(--neon-lime);" id="node1-status">● ONLINE</span>
+                        </div>
+                        <div style="font-size:14px; color:#fff; font-weight:bold;">Firestore v8.10.1</div>
+                        <div style="font-size:9px; color:var(--neon-cyan);">Latency: <span id="node1-latency">14ms</span> | Ping: Stable</div>
+                    </div>
+                    <div class="db-node-box glass-cyber">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:var(--text-sub);">REALTIME SYNC</span>
+                            <span style="color:var(--neon-lime);" id="node2-status">● STREAMING</span>
+                        </div>
+                        <div style="font-size:14px; color:#fff; font-weight:bold;">Firebase RTDB</div>
+                        <div style="font-size:9px; color:var(--neon-cyan);">Sockets: <span id="active-sockets">128 Active</span></div>
+                    </div>
+                    <div class="db-node-box glass-cyber">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:var(--text-sub);">MEMORY ALLOC</span>
+                            <span style="color:var(--neon-amber);" id="mem-usage">42.8%</span>
+                        </div>
+                        <div style="font-size:14px; color:#fff; font-weight:bold;">12.4 GB / 32 GB</div>
+                        <div style="font-size:9px; color:var(--text-sub);">Cache Hit Rate: 99.4%</div>
+                    </div>
+                    <div class="db-node-box glass-cyber">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:var(--text-sub);">THREAT DEFENSE</span>
+                            <span style="color:var(--neon-lime);">ARMED</span>
+                        </div>
+                        <div style="font-size:14px; color:#fff; font-weight:bold;">Neural Sentinel v2</div>
+                        <div style="font-size:9px; color:var(--neon-cyan);">Blocked Packets: <span id="blocked-packets">0</span></div>
+                    </div>
+                </div>
+
                 <div class="stats-grid">
                     <div class="stat-card glass-cyber"><span class="val" id="stat-users">0</span><span class="lbl">Registered Accounts</span></div>
                     <div class="stat-card glass-cyber"><span class="val" id="stat-posts">0</span><span class="lbl">Active Network Posts</span></div>
@@ -384,13 +437,35 @@
                     <div class="stat-card glass-cyber"><span class="val" id="stat-reports">0</span><span class="lbl">Open Reports</span></div>
                 </div>
 
+                <!-- Real-Time Chart.js Telemetry Graphs -->
                 <div class="grid-2">
-                    <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 16px;">
-                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Real-Time Activity Matrix</h3>
-                        <div id="heatmap-container" style="display: flex; gap: 10px; align-items: flex-end; height: 140px; padding-top: 10px;"></div>
+                    <div class="glass-cyber" style="padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Real-Time Query Throughput (QPS)</h3>
+                            <span class="badge-pill">Live Telemetry</span>
+                        </div>
+                        <div style="height: 220px; position: relative;">
+                            <canvas id="qpsChart"></canvas>
+                        </div>
                     </div>
-                    <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 16px;">
-                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Quick Matrix Actions</h3>
+                    <div class="glass-cyber" style="padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Database Collection Distribution (%)</h3>
+                            <span class="badge-pill">Storage Metrics</span>
+                        </div>
+                        <div style="height: 220px; position: relative; display: flex; justify-content: center;">
+                            <canvas id="storageChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="glass-cyber" style="padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Activity Matrix Heatmap</h3>
+                        <div id="heatmap-container" style="display: flex; gap: 8px; align-items: flex-end; height: 130px; padding-top: 10px;"></div>
+                    </div>
+                    <div class="glass-cyber" style="padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Database Kernel Actions</h3>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                             <button class="btn btn-primary" onclick="openLiveBroadcastModal()">Launch Broadcast</button>
                             <button class="btn btn-secondary" onclick="openAnnouncementModal()">Banner Notice</button>
@@ -403,9 +478,9 @@
 
             <!-- TAB: USERS -->
             <div id="tab-users" class="tab-pane">
-                <div class="glass-cyber" style="padding: 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <div class="glass-cyber" style="padding: 14px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                     <input type="text" id="user-search" class="input" style="flex: 1; min-width: 240px;" placeholder="Search handle, display name or UID..." oninput="renderUserTable()">
-                    <select id="user-filter" class="input" style="max-width: 180px;" onchange="renderUserTable()">
+                    <select id="user-filter" class="input" style="max-width: 170px;" onchange="renderUserTable()">
                         <option value="all">All Accounts</option>
                         <option value="banned">Banned Only</option>
                         <option value="muted">Muted Only</option>
@@ -438,7 +513,7 @@
 
             <!-- TAB: GLOBAL CHAT -->
             <div id="tab-chat" class="tab-pane">
-                <div class="glass-cyber" style="padding: 16px; display: flex; justify-content: space-between; align-items: center;">
+                <div class="glass-cyber" style="padding: 14px; display: flex; justify-content: space-between; align-items: center;">
                     <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Live Global Chat Feed (Synced)</h3>
                     <button class="btn btn-danger btn-sm" onclick="purgeGlobalChat()">Wipe Entire Chat</button>
                 </div>
@@ -448,7 +523,7 @@
 
                     <div id="chatReplyBanner" class="chat-reply-banner" style="display:none;">
                         <div>Replying to <span id="replyingTargetUser"></span>: <span id="replyingTargetText" style="color:var(--text-sub);"></span></div>
-                        <button onclick="cancelChatReply()" class="btn btn-secondary btn-sm" style="padding: 2px 8px;">✕</button>
+                        <button onclick="cancelChatReply()" class="btn btn-secondary btn-sm" style="padding: 2px 6px;">✕</button>
                     </div>
 
                     <div class="chat-input-bar">
@@ -461,7 +536,7 @@
             <!-- TAB: STREAM -->
             <div id="tab-stream" class="tab-pane">
                 <div class="grid-2">
-                    <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 18px;">
+                    <div class="glass-cyber" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
                         <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Broadcast Live Video Stream</h3>
                         <div class="input-group">
                             <label>Broadcast Title</label>
@@ -477,9 +552,9 @@
                         </div>
                         <button class="btn btn-primary" onclick="startLiveBroadcast()">Initiate Global Broadcast</button>
                     </div>
-                    <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 18px;">
+                    <div class="glass-cyber" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
                         <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Active Live Broadcasts</h3>
-                        <div class="table-container" style="max-height: 280px;">
+                        <div class="table-container" style="max-height: 260px;">
                             <table class="data-table">
                                 <thead><tr><th>Title</th><th>Host</th><th>Action</th></tr></thead>
                                 <tbody id="live-streams-table-body"></tbody>
@@ -492,22 +567,22 @@
             <!-- TAB: AI MODERATION -->
             <div id="tab-ai" class="tab-pane">
                 <div class="grid-2">
-                    <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 18px;">
+                    <div class="glass-cyber" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
                         <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Neural Sentinel Engine</h3>
-                        <p style="font-size: 13px; color: var(--text-sub); line-height: 1.5;">The neural scanner automatically evaluates posts and chat feeds for disruptive patterns and policy violations.</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                        <p style="font-size: 12px; color: var(--text-sub); line-height: 1.5;">The neural scanner automatically evaluates posts and chat feeds for disruptive patterns and policy violations.</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
                             <span>Active Auto-Filtering</span>
-                            <input type="checkbox" id="ai-filter-toggle" checked style="width: 20px; height: 20px; accent-color: var(--neon-cyan); cursor: pointer;" onchange="toggleAiFeature('autoFilter', this.checked)">
+                            <input type="checkbox" id="ai-filter-toggle" checked style="width: 18px; height: 18px; accent-color: var(--neon-cyan); cursor: pointer;" onchange="toggleAiFeature('autoFilter', this.checked)">
                         </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
                             <span>Auto-Quarantine Toxic Accounts</span>
-                            <input type="checkbox" id="ai-ban-toggle" style="width: 20px; height: 20px; accent-color: var(--neon-cyan); cursor: pointer;" onchange="toggleAiFeature('autoBan', this.checked)">
+                            <input type="checkbox" id="ai-ban-toggle" style="width: 18px; height: 18px; accent-color: var(--neon-cyan); cursor: pointer;" onchange="toggleAiFeature('autoBan', this.checked)">
                         </div>
                         <button class="btn btn-primary" onclick="runAiScanNow()">Execute Deep Neural Scan</button>
                     </div>
-                    <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 18px;">
+                    <div class="glass-cyber" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
                         <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Neural Threat Log</h3>
-                        <div class="terminal" id="ai-log-terminal" style="height: 220px;">
+                        <div class="terminal" id="ai-log-terminal" style="height: 200px;">
                             <div>[SENTINEL] Neural security daemon online...</div>
                         </div>
                     </div>
@@ -517,7 +592,7 @@
             <!-- TAB: BADGES -->
             <div id="tab-badges" class="tab-pane">
                 <div class="grid-2">
-                    <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 18px;">
+                    <div class="glass-cyber" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
                         <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Deploy Custom Rank Badge</h3>
                         <div class="input-group">
                             <label>Badge Title / ID</label>
@@ -529,7 +604,7 @@
                         </div>
                         <div class="input-group">
                             <label>Glow Color</label>
-                            <input type="color" id="badge-color" class="input" value="#00f0ff" style="height: 44px; padding: 4px; cursor: pointer;">
+                            <input type="color" id="badge-color" class="input" value="#00f0ff" style="height: 42px; padding: 4px; cursor: pointer;">
                         </div>
                         <button class="btn btn-primary" onclick="createCustomBadge()">Deploy Badge Definition</button>
                     </div>
@@ -545,7 +620,7 @@
             <!-- TAB: PROMOS -->
             <div id="tab-promos" class="tab-pane">
                 <div class="grid-2">
-                    <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 18px;">
+                    <div class="glass-cyber" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
                         <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Generate Voucher Code (Coins & Badge Rewards)</h3>
                         <div class="input-group">
                             <label>Voucher Code String</label>
@@ -584,20 +659,20 @@
 
             <!-- TAB: SETTINGS -->
             <div id="tab-settings" class="tab-pane">
-                <div class="glass-cyber" style="padding: 26px; display: flex; flex-direction: column; gap: 20px; max-width: 680px;">
+                <div class="glass-cyber" style="padding: 24px; display: flex; flex-direction: column; gap: 18px; max-width: 660px;">
                     <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Global Matrix Parameters</h3>
                     
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span>New User Registrations Active</span>
-                        <input type="checkbox" id="setting-reg" style="width: 20px; height: 20px; accent-color: var(--neon-cyan); cursor: pointer;" onchange="updateSystemSetting('registrationOpen', this.checked)">
+                        <input type="checkbox" id="setting-reg" style="width: 18px; height: 18px; accent-color: var(--neon-cyan); cursor: pointer;" onchange="updateSystemSetting('registrationOpen', this.checked)">
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span>User Posting Enabled</span>
-                        <input type="checkbox" id="setting-post" style="width: 20px; height: 20px; accent-color: var(--neon-cyan); cursor: pointer;" onchange="updateSystemSetting('postingOpen', this.checked)">
+                        <input type="checkbox" id="setting-post" style="width: 18px; height: 18px; accent-color: var(--neon-cyan); cursor: pointer;" onchange="updateSystemSetting('postingOpen', this.checked)">
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span>System Maintenance Mode</span>
-                        <input type="checkbox" id="setting-maint" style="width: 20px; height: 20px; accent-color: var(--neon-pink); cursor: pointer;" onchange="updateSystemSetting('maintenanceMode', this.checked)">
+                        <input type="checkbox" id="setting-maint" style="width: 18px; height: 18px; accent-color: var(--neon-pink); cursor: pointer;" onchange="updateSystemSetting('maintenanceMode', this.checked)">
                     </div>
                     <div class="input-group" style="margin-top: 4px;">
                         <label>Global Matrix Banner Announcement</label>
@@ -609,29 +684,28 @@
                 </div>
             </div>
 
-            <!-- TAB: OWNER VAULT (ENHANCED UI WITH LOCKDOWN BUTTON & POPUP MODAL) -->
+            <!-- TAB: OWNER VAULT -->
             <div id="tab-owner" class="tab-pane">
-                <div class="glass-cyber" style="padding: 32px; display: flex; flex-direction: column; gap: 24px; max-width: 840px; border-color: rgba(255, 183, 3, 0.4); box-shadow: 0 0 50px rgba(255, 183, 3, 0.15);">
+                <div class="glass-cyber" style="padding: 30px; display: flex; flex-direction: column; gap: 22px; max-width: 820px; border-color: rgba(255, 183, 3, 0.4); box-shadow: 0 0 50px rgba(255, 183, 3, 0.15);">
                     <div style="display: flex; align-items: center; gap: 16px;">
-                        <div class="brand-logo" style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); font-size: 24px; color: #fff;">🛡️</div>
+                        <div class="brand-logo" style="width: 52px; height: 52px; background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); font-size: 22px; color: #fff;">🛡️</div>
                         <div>
-                            <h3 style="font-family: 'Orbitron', sans-serif; font-size: 14px; color: var(--neon-amber); text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">Sovereign Owner Master Vault</h3>
-                            <div id="connection-status" style="font-size: 11px; color: var(--neon-lime); font-family: 'JetBrains Mono', monospace; margin-top: 4px;">Status: Connected to Firestore ✓</div>
+                            <h3 style="font-family: 'Orbitron', sans-serif; font-size: 13px; color: var(--neon-amber); text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">Sovereign Owner Master Vault</h3>
+                            <div id="connection-status" style="font-size: 10px; color: var(--neon-lime); font-family: 'JetBrains Mono', monospace; margin-top: 4px;">Status: Connected to Firestore ✓</div>
                         </div>
                     </div>
 
-                    <!-- Enhanced Lockdown Control Box inside Vault -->
-                    <div style="background: rgba(255, 183, 3, 0.04); border: 1px solid rgba(255, 183, 3, 0.25); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 12px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <div style="background: rgba(255, 183, 3, 0.04); border: 1px solid rgba(255, 183, 3, 0.25); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                             <div>
-                                <h4 style="font-family: 'Orbitron', sans-serif; font-size: 11px; color: var(--neon-amber); text-transform: uppercase; letter-spacing: 1.5px;">Security Lockdown</h4>
-                                <p style="font-size: 12px; color: var(--text-sub); margin-top: 2px;">Immediately engages emergency lockdown protocol across all synced client terminals.</p>
+                                <h4 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-amber); text-transform: uppercase; letter-spacing: 1.5px;">Security Lockdown</h4>
+                                <p style="font-size: 11px; color: var(--text-sub); margin-top: 2px;">Immediately engages emergency lockdown protocol across all synced client terminals.</p>
                             </div>
-                            <button class="btn btn-primary" onclick="openLockdownModal()" style="background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); color: #fff; padding: 12px 24px;">🔒 Trigger Lockdown</button>
+                            <button class="btn btn-primary" onclick="openLockdownModal()" style="background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); color: #fff; padding: 11px 22px;">🔒 Trigger Lockdown</button>
                         </div>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                         <button class="btn btn-secondary" onclick="coinSinkTax()">Apply 10% Wealth Tax (>100 Coins)</button>
                         <button class="btn btn-secondary" onclick="coinSinkDividend()">Execute +100 Coin Dividend</button>
                         <button class="btn btn-secondary" onclick="bulkCoinGivePrompt()">Bulk Distribute Coins</button>
@@ -653,19 +727,18 @@
     </div>
 
     <!-- Modals -->
-    <!-- Lockdown Confirmation / Popup Modal -->
     <div class="modal-overlay" id="vault-lockdown-popup">
-        <div class="modal glass-cyber" style="max-width: 520px; border-color: rgba(255, 183, 3, 0.5); box-shadow: 0 0 60px rgba(255, 183, 3, 0.25);">
+        <div class="modal glass-cyber" style="max-width: 500px; border-color: rgba(255, 183, 3, 0.5); box-shadow: 0 0 50px rgba(255, 183, 3, 0.25);">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-amber); font-size: 15px; font-weight: 900; letter-spacing: 1.5px;">⚡ CONFIRM SYSTEM LOCKDOWN</h3>
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-amber); font-size: 14px; font-weight: 900; letter-spacing: 1.5px;">⚡ CONFIRM SYSTEM LOCKDOWN</h3>
                 <button class="btn btn-secondary btn-sm" onclick="closeLockdownModal()">✕ Close</button>
             </div>
-            <p style="font-size: 13px; color: var(--text-sub); line-height: 1.5;">Are you sure you want to lock down the entire network? All connected interfaces will be instantly intercepted and secured behind the Master Vault cipher gate.</p>
-            <div style="background: rgba(2, 6, 23, 0.6); padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(255, 183, 3, 0.2);">
-                <span style="font-size: 11px; font-family: 'Orbitron', sans-serif; color: var(--neon-amber); text-transform: uppercase;">Unlock Password:</span>
-                <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #fff; margin-top: 4px; letter-spacing: 2px;">YOU think ima tell you;-;</div>
+            <p style="font-size: 12px; color: var(--text-sub); line-height: 1.5;">Are you sure you want to lock down the entire network? All connected interfaces will be instantly intercepted and secured behind the Master Vault cipher gate.</p>
+            <div style="background: rgba(1, 4, 9, 0.7); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255, 183, 3, 0.2);">
+                <span style="font-size: 10px; font-family: 'Orbitron', sans-serif; color: var(--neon-amber); text-transform: uppercase;">Unlock Password:</span>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #fff; margin-top: 3px; letter-spacing: 2px;">YOU think ima tell you;-;</div>
             </div>
-            <div style="display: flex; gap: 12px; margin-top: 4px;">
+            <div style="display: flex; gap: 10px; margin-top: 4px;">
                 <button class="btn btn-secondary" onclick="closeLockdownModal()" style="flex: 1;">Cancel</button>
                 <button class="btn btn-primary" onclick="confirmAndActivateLockdown()" style="flex: 1; background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); color: #fff;">Engage Lockdown</button>
             </div>
@@ -675,7 +748,7 @@
     <div class="modal-overlay" id="live-broadcast-modal">
         <div class="modal glass-cyber">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 16px; font-weight: 900;">Live Broadcast Studio</h3>
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 15px; font-weight: 900;">Live Broadcast Studio</h3>
                 <button class="btn btn-secondary btn-sm" onclick="closeLiveBroadcastModal()">✕ Close</button>
             </div>
             <div class="input-group">
@@ -697,7 +770,7 @@
     <div class="modal-overlay" id="password-modal">
         <div class="modal glass-cyber">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 16px; font-weight: 900;">Modify Admin Access Cipher</h3>
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 15px; font-weight: 900;">Modify Admin Access Cipher</h3>
                 <button class="btn btn-secondary btn-sm" onclick="closePasswordModal()">✕ Close</button>
             </div>
             <div class="input-group">
@@ -719,29 +792,29 @@
     <div class="modal-overlay" id="lookup-modal">
         <div class="modal glass-cyber">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 16px; font-weight: 900;">Account Security Inspector</h3>
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 15px; font-weight: 900;">Account Security Inspector</h3>
                 <button class="btn btn-secondary btn-sm" onclick="closeLookupModal()">✕ Close</button>
             </div>
             <div style="display: flex; gap: 10px;">
                 <input type="text" id="lookup-input-query" class="input" placeholder="Enter handle or exact UID...">
                 <button class="btn btn-primary" onclick="executeUserLookup()">Search</button>
             </div>
-            <div id="lookup-results-container" style="display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto;">
-                <p style="color: var(--text-sub); font-size: 13px; text-align: center; padding: 30px;">Run a lookup search to inspect organized user database records.</p>
+            <div id="lookup-results-container" style="display: flex; flex-direction: column; gap: 10px; max-height: 380px; overflow-y: auto;">
+                <p style="color: var(--text-sub); font-size: 12px; text-align: center; padding: 25px;">Run a lookup search to inspect organized user database records.</p>
             </div>
         </div>
     </div>
 
     <div class="modal-overlay" id="user-modal">
         <div class="modal glass-cyber">
-            <h3 id="modal-username" style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 16px; font-weight: 900;">Manage User Account</h3>
+            <h3 id="modal-username" style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 15px; font-weight: 900;">Manage User Account</h3>
             <div class="input-group">
                 <label>Display Name</label>
                 <input type="text" id="modal-displayname" class="input">
             </div>
             <div class="input-group">
                 <label>User Bio</label>
-                <textarea id="modal-bio" class="input" style="resize: none; height: 70px;"></textarea>
+                <textarea id="modal-bio" class="input" style="resize: none; height: 60px;"></textarea>
             </div>
             <div class="input-group">
                 <label>Direct User Password Override</label>
@@ -759,13 +832,13 @@
                     <button class="btn btn-secondary" onclick="modUserCoins('set')">Set</button>
                 </div>
             </div>
-            <div style="display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap;">
+            <div style="display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap;">
                 <button class="btn btn-secondary" id="modal-btn-verify" onclick="toggleUserStatus('verified')">Toggle Verification</button>
                 <button class="btn btn-secondary" id="modal-btn-ban" onclick="toggleUserStatus('banned')">Toggle Ban</button>
                 <button class="btn btn-secondary" id="modal-btn-mute" onclick="toggleUserStatus('muted')">Toggle Mute</button>
                 <button class="btn btn-danger" onclick="deleteAccountModal()">Delete Account</button>
             </div>
-            <button class="btn btn-secondary" onclick="closeUserModal()" style="margin-top: 10px;">Done</button>
+            <button class="btn btn-secondary" onclick="closeUserModal()" style="margin-top: 8px;">Done</button>
         </div>
     </div>
 
@@ -785,7 +858,6 @@
         const db = firebase.firestore();
         const rtdb = firebase.database();
 
-        // Firestore Document Reference for Lockdown: collection "config", document "appSettings"
         const settingsRef = db.collection('config').doc('appSettings');
 
         let currentUserData = null;
@@ -800,6 +872,10 @@
         let musicPlaying = false;
         let replyingToChatId = null;
 
+        let qpsChartInstance = null;
+        let storageChartInstance = null;
+        let queryCounter = 42;
+
         // --- Simulated High-Tech Loading Screen Sequence ---
         window.addEventListener('DOMContentLoaded', () => {
             let progress = 0;
@@ -812,22 +888,89 @@
                 if(progress >= 100) {
                     progress = 100;
                     clearInterval(interval);
-                    status.innerText = "Neural Link Established.";
+                    status.innerText = "Database Kernel Mounted.";
                     setTimeout(() => {
                         screen.style.opacity = '0';
-                        setTimeout(() => screen.remove(), 500);
-                    }, 350);
+                        setTimeout(() => screen.remove(), 400);
+                        initCharts();
+                    }, 300);
                 }
                 bar.style.width = progress + '%';
-            }, 100);
+            }, 90);
         });
+
+        function initCharts() {
+            // QPS Line Chart
+            const qpsCtx = document.getElementById('qpsChart').getContext('2d');
+            qpsChartInstance = new Chart(qpsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['-50s', '-40s', '-30s', '-20s', '-10s', 'Now'],
+                    datasets: [{
+                        label: 'Queries / Sec',
+                        data: [18, 25, 42, 31, 55, 48],
+                        borderColor: '#00f0ff',
+                        backgroundColor: 'rgba(0, 240, 255, 0.08)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.35
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#8892b0', font: { family: 'JetBrains Mono', size: 9 } } },
+                        y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#8892b0', font: { family: 'JetBrains Mono', size: 9 } }, beginAtZero: true }
+                    }
+                }
+            });
+
+            // Storage Doughnut Chart
+            const storageCtx = document.getElementById('storageChart').getContext('2d');
+            storageChartInstance = new Chart(storageCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Users Collection', 'Posts & Media', 'Global Chat', 'System Metadata'],
+                    datasets: [{
+                        data: [45, 30, 15, 10],
+                        backgroundColor: ['#00f0ff', '#b026ff', '#39ff14', '#ffb703'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#8892b0', font: { family: 'Orbitron', size: 8 }, boxWidth: 10 }
+                        }
+                    }
+                }
+            });
+
+            // Periodically update live telemetry numbers
+            setInterval(() => {
+                if (qpsChartInstance) {
+                    const newVal = Math.floor(Math.random() * 35) + 25;
+                    qpsChartInstance.data.datasets[0].data.shift();
+                    qpsChartInstance.data.datasets[0].data.push(newVal);
+                    qpsChartInstance.update('none');
+                }
+                queryCounter += Math.floor(Math.random() * 5) + 1;
+                document.getElementById('active-sockets').innerText = (120 + Math.floor(Math.random() * 15)) + ' Active';
+                document.getElementById('node1-latency').innerText = (12 + Math.floor(Math.random() * 6)) + 'ms';
+            }, 3000);
+        }
 
         document.addEventListener('click', (e) => {
             if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
                 const sfx = document.getElementById('click-sfx');
                 if (sfx) {
                     sfx.currentTime = 0;
-                    sfx.volume = 0.25;
+                    sfx.volume = 0.2;
                     sfx.play().catch(() => {});
                 }
             }
@@ -861,7 +1004,7 @@
                 audio.pause();
                 musicPlaying = false;
                 btn.innerText = '🎵 Music: OFF';
-                btn.style.borderColor = 'rgba(255,255,255,0.1)';
+                btn.style.borderColor = 'rgba(255,255,255,0.08)';
                 btn.style.color = 'var(--text-main)';
                 showToast('Music muted');
             }
@@ -886,7 +1029,7 @@
             t.className = 'toast glass-cyber';
             t.innerHTML = `⚡ <span>${msg}</span>`;
             document.body.appendChild(t);
-            setTimeout(() => t.remove(), 3200);
+            setTimeout(() => t.remove(), 3000);
         }
 
         async function handleLogin() {
@@ -992,12 +1135,15 @@
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.add('active');
             event.target.classList.add('active');
+            if(tabId === 'stats' && qpsChartInstance) {
+                qpsChartInstance.resize();
+                storageChartInstance.resize();
+            }
         }
 
         function openAiTerminalTab() { switchTab('ai'); }
 
         function initRealtimeListeners() {
-            // Initialize Firestore settings document with default values and unlockPassword set to "AIMEISPRO"
             settingsRef.get().then((doc) => {
                 if (!doc.exists) {
                     settingsRef.set({
@@ -1005,12 +1151,10 @@
                         unlockPassword: "AIMEISPRO"
                     });
                 } else {
-                    // Ensure unlockPassword is set to AIMEISPRO as requested
                     settingsRef.update({ unlockPassword: "AIMEISPRO" }).catch(() => {});
                 }
             }).catch((err) => console.error("Error checking doc:", err));
 
-            // Real-Time Firestore Listener for Global Lockdown
             const statusDiv = document.getElementById('connection-status');
             const lockdownOverlay = document.getElementById('lockdown-overlay');
             const errorMsg = document.getElementById('error-msg');
@@ -1120,7 +1264,6 @@
             });
         }
 
-        // --- Lockdown Modal Controls ---
         function openLockdownModal() {
             document.getElementById('vault-lockdown-popup').style.display = 'flex';
         }
@@ -1134,7 +1277,6 @@
             activateLockdown();
         }
 
-        // --- Owner Vault lockdown activation ---
         function activateLockdown() {
             settingsRef.update({ lockdown: true, unlockPassword: "AIMEISPRO" })
                 .then(() => {
@@ -1146,7 +1288,6 @@
                 });
         }
 
-        // --- User function to check password and lift lockdown globally ---
         function handleUnlockAttempt() {
             const enteredValue = document.getElementById('password-input').value;
             const errorMsg = document.getElementById('error-msg');
@@ -1173,14 +1314,13 @@
             });
         }
 
-        // --- ENHANCED & SYNCHRONIZED GLOBAL CHAT LOGIC ---
         function renderGlobalChatUI() {
             const container = document.getElementById('globalChatMessages');
             if(!container) return;
             container.innerHTML = '';
 
             if (chatCache.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-sub); text-align:center; padding:20px; font-size:13px;">No chat transmissions recorded yet.</p>';
+                container.innerHTML = '<p style="color:var(--text-sub); text-align:center; padding:20px; font-size:12px;">No chat transmissions recorded yet.</p>';
                 return;
             }
 
@@ -1200,7 +1340,7 @@
                     ${replyQuoteHtml}
                     <div class="chat-msg-sender">@${escapeHtml(msg.username || 'anonymous')}</div>
                     <div class="chat-msg-text">${escapeHtml(msg.text || '')}</div>
-                    <div style="display:flex; gap:12px; margin-top:4px;">
+                    <div style="display:flex; gap:10px; margin-top:4px;">
                         <button class="chat-reply-trigger" onclick="initiateChatReply('${msg.id}', '${escapeHtml(msg.username || 'anonymous')}', '${escapeHtml(msg.text || '')}')">Reply</button>
                         <button class="chat-reply-trigger" style="color:var(--neon-pink);" onclick="deleteChatMessage('${msg.id}')">Delete</button>
                     </div>
@@ -1287,7 +1427,7 @@
                 const verifiedTag = u.verified ? '<span style="color:var(--neon-cyan); margin-left: 4px;" title="Verified">✓</span>' : '';
                 tbody.innerHTML += `
                     <tr>
-                        <td><b>@${u.username || 'unknown'}</b>${verifiedTag}<br><span style="font-size:10px;color:var(--text-sub);font-family:'JetBrains Mono',monospace;">${u.id}</span></td>
+                        <td><b>@${u.username || 'unknown'}</b>${verifiedTag}<br><span style="font-size:9px;color:var(--text-sub);font-family:'JetBrains Mono',monospace;">${u.id}</span></td>
                         <td>${u.coins || 0}</td>
                         <td><span class="badge-pill">${u.badge || 'member'}</span></td>
                         <td>${u.banned ? '<span style="color:var(--neon-pink);font-weight:700;">Banned</span>' : (u.muted ? '<span style="color:var(--neon-amber);font-weight:700;">Muted</span>' : '<span style="color:var(--neon-lime);font-weight:600;">Active</span>')}</td>
@@ -1352,7 +1492,7 @@
             setTimeout(() => {
                 logAi(`Scan complete. Analyzed ${postsCache.length} posts and ${usersCache.length} user records. 0 threats detected.`);
                 showToast('Neural deep scan finished successfully!');
-            }, 1200);
+            }, 1000);
         }
 
         function openLookupModalPrompt() { document.getElementById('lookup-modal').style.display = 'flex'; }
@@ -1366,10 +1506,10 @@
         async function executeUserLookup() {
             const query = document.getElementById('lookup-input-query').value.trim().toLowerCase();
             const container = document.getElementById('lookup-results-container');
-            container.innerHTML = '<p style="color:var(--text-sub);font-size:13px;text-align:center;">Querying database records...</p>';
+            container.innerHTML = '<p style="color:var(--text-sub);font-size:12px;text-align:center;">Querying database records...</p>';
 
             if(!query) {
-                container.innerHTML = '<p style="color:var(--neon-pink);font-size:13px;text-align:center;">Please provide a handle or UID.</p>';
+                container.innerHTML = '<p style="color:var(--neon-pink);font-size:12px;text-align:center;">Please provide a handle or UID.</p>';
                 return;
             }
 
@@ -1386,17 +1526,17 @@
             }
 
             if(!foundUser) {
-                container.innerHTML = `<p style="color:var(--neon-pink);font-size:13px;text-align:center;">No records found for query: "${query}"</p>`;
+                container.innerHTML = `<p style="color:var(--neon-pink);font-size:12px;text-align:center;">No records found for query: "${query}"</p>`;
                 return;
             }
 
-            let html = `<div class="glass-cyber" style="padding: 20px; display: flex; flex-direction: column; gap: 10px; border-color: var(--border-glow);"><div style="display:flex; justify-content:space-between; align-items:center;"><h4 style="font-family:'Orbitron',sans-serif; color:var(--neon-cyan); font-size:15px; font-weight:900;">@${foundUser.username || 'unknown'}</h4><button class="btn btn-secondary btn-sm" onclick="openUserModal('${foundUser.id}')">Manage Account</button></div>`;
+            let html = `<div class="glass-cyber" style="padding: 18px; display: flex; flex-direction: column; gap: 8px; border-color: var(--border-glow);"><div style="display:flex; justify-content:space-between; align-items:center;"><h4 style="font-family:'Orbitron',sans-serif; color:var(--neon-cyan); font-size:14px; font-weight:900;">@${foundUser.username || 'unknown'}</h4><button class="btn btn-secondary btn-sm" onclick="openUserModal('${foundUser.id}')">Manage Account</button></div>`;
 
             for(const [key, val] of Object.entries(foundUser)) {
                 let displayVal = val;
                 if(typeof val === 'object' && val !== null && val.toDate) { displayVal = val.toDate().toLocaleString(); }
                 else if(typeof val === 'object') { displayVal = JSON.stringify(val); }
-                html += `<div style="display:flex; justify-content:space-between; font-size:12px; border-bottom:1px solid rgba(255,255,255,0.04); padding:6px 0;"><span style="color:var(--text-sub);font-weight:600;">${key}</span><span style="color:#fff; text-align:right; max-width:60%; word-break:break-all; font-family:'JetBrains Mono',monospace;">${displayVal}</span></div>`;
+                html += `<div style="display:flex; justify-content:space-between; font-size:11px; border-bottom:1px solid rgba(255,255,255,0.03); padding:5px 0;"><span style="color:var(--text-sub);font-weight:600;">${key}</span><span style="color:#fff; text-align:right; max-width:60%; word-break:break-all; font-family:'JetBrains Mono',monospace;">${displayVal}</span></div>`;
             }
 
             html += `</div>`;
@@ -1690,8 +1830,8 @@
             const container = document.getElementById('heatmap-container');
             container.innerHTML = '';
             for(let i = 6; i >= 0; i--) {
-                const height = Math.floor(Math.random() * 85) + 20;
-                container.innerHTML += `<div style="flex:1; background:var(--neon-cyan); height:${height}px; border-radius:6px; opacity:0.8; transition: opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.8" title="Activity Index"></div>`;
+                const height = Math.floor(Math.random() * 80) + 20;
+                container.innerHTML += `<div style="flex:1; background:var(--neon-cyan); height:${height}px; border-radius:4px; opacity:0.8; transition: opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.8" title="Query Activity Index"></div>`;
             }
         }
     </script>
