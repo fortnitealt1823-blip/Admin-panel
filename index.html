@@ -314,19 +314,57 @@
         <source src="https://actions.google.com/sounds/v1/ui/button_click.ogg" type="audio/ogg">
     </audio>
 
-    <!-- FIRESTORE GLOBAL LOCKDOWN OVERLAY -->
-    <div id="lockdown-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at center, #0b1329 0%, #010409 100%); color: #ffffff; z-index: 99999; text-align: center; padding-top: 20vh; box-sizing: border-box; backdrop-filter: blur(20px);">
-        <div class="glass-cyber" style="max-width: 580px; margin: 0 auto; padding: 44px; border-color: rgba(255, 183, 3, 0.4); box-shadow: 0 0 70px rgba(255, 183, 3, 0.2);">
-            <div class="brand-logo" style="width: 68px; height: 68px; margin: 0 auto 18px auto; background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); font-size: 26px; color: #fff;">🔒</div>
-            <h1 style="color: var(--neon-amber); font-size: 2rem; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 2px;">OWNER VAULT SECURED</h1>
-            <p style="color: var(--text-sub); font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px;">System-wide lockdown protocol active across all connected nodes.</p>
-            <p style="font-size: 11px; color: var(--text-main); margin-bottom: 22px;">Enter the Master Owner Key to bypass security and unlock the matrix:</p>
+    <!-- SCREEN 1: UPDATE ANIMATION OVERLAY (Spinning Quantum Animation) -->
+    <div id="update-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at center, #051937 0%, #010409 100%); color: #ffffff; z-index: 99999; text-align: center; padding-top: 20vh; box-sizing: border-box; backdrop-filter: blur(20px);">
+        <div class="glass-cyber" style="max-width: 580px; margin: 0 auto; padding: 44px; border-color: rgba(0, 240, 255, 0.4); box-shadow: 0 0 70px rgba(0, 240, 255, 0.3);">
+            <div class="loader-core" style="width: 72px; height: 72px; margin: 0 auto 18px auto; border-top-color: var(--neon-lime); animation: spinUpdateAnim 0.7s linear infinite;"></div>
+            <style>
+                @keyframes spinUpdateAnim { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.1); } 100% { transform: rotate(360deg) scale(1); } }
+            </style>
+            <h1 style="color: var(--neon-lime); font-size: 1.8rem; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 2px;">SYSTEM UPDATE IN PROGRESS</h1>
+            <p style="color: var(--text-sub); font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px;">Applying quantum patch sequence across client nodes. Please stand by...</p>
+            
+            <div class="loader-bar-track" style="width: 100%; max-width: 380px; margin: 20px auto;">
+                <div class="loader-bar-fill" style="width: 90%; background: linear-gradient(90deg, var(--neon-lime), var(--neon-cyan)); animation: pulseUpdateBar 1.2s infinite alternate;"></div>
+            </div>
+            <style>
+                @keyframes pulseUpdateBar { 0% { width: 20%; } 100% { width: 100%; } }
+            </style>
+
+            <p style="font-size: 11px; color: var(--text-main); margin-bottom: 22px;">Enter Master Password (<span style="color: var(--neon-lime);">AIMEISPRO</span>) to bypass update screen:</p>
             
             <div style="display: flex; flex-direction: column; gap: 14px; align-items: center;">
-                <input type="password" id="password-input" class="input" style="width: 100%; max-width: 340px; text-align: center; letter-spacing: 3px;" placeholder="ENTER MASTER CIPHER">
-                <button class="btn btn-primary" onclick="handleUnlockAttempt()" style="width: 100%; max-width: 340px; background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); color: #fff;">Unlock Owner Vault</button>
+                <input type="password" id="update-password-input" class="input" style="width: 100%; max-width: 340px; text-align: center; letter-spacing: 3px;" placeholder="ENTER AIMEISPRO">
+                <button class="btn btn-primary" onclick="handleUnlockAttempt('update')" style="width: 100%; max-width: 340px; background: linear-gradient(135deg, var(--neon-lime), var(--neon-cyan)); color:#010409;">Bypass Update Screen</button>
             </div>
-            <div id="error-msg" style="color: var(--neon-pink); margin-top: 14px; display: none; font-size: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">ACCESS DENIED: INVALID MASTER KEY</div>
+            <div id="update-error-msg" style="color: var(--neon-pink); margin-top: 14px; display: none; font-size: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">ACCESS DENIED: INVALID MASTER KEY</div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: LOCKDOWN OVERLAY (Pulsing Crimson/Pink Alert Animation) -->
+    <div id="lockdown-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at center, #290b1a 0%, #010409 100%); color: #ffffff; z-index: 99999; text-align: center; padding-top: 20vh; box-sizing: border-box; backdrop-filter: blur(20px);">
+        <div class="glass-cyber" style="max-width: 580px; margin: 0 auto; padding: 44px; border-color: rgba(255, 0, 127, 0.6); box-shadow: 0 0 80px rgba(255, 0, 127, 0.35); animation: pulseLockdownCard 1.5s ease-in-out infinite alternate;">
+            <style>
+                @keyframes pulseLockdownCard { 0% { box-shadow: 0 0 40px rgba(255, 0, 127, 0.2); } 100% { box-shadow: 0 0 90px rgba(255, 0, 127, 0.6); } }
+            </style>
+            <div style="width: 68px; height: 68px; border: 3px solid rgba(255,0,127,0.2); border-top: 3px solid var(--neon-pink); border-radius: 50%; margin: 0 auto 18px auto; animation: spinLockdown 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;"></div>
+            <style>
+                @keyframes spinLockdown { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
+            </style>
+            <h1 style="color: var(--neon-pink); font-size: 1.8rem; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 2px;">EMERGENCY LOCKDOWN ACTIVE</h1>
+            <p style="color: var(--text-sub); font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px;">All client connections have been securely restricted by system command.</p>
+            
+            <div class="loader-bar-track" style="width: 100%; max-width: 380px; margin: 20px auto;">
+                <div class="loader-bar-fill" style="width: 100%; background: linear-gradient(90deg, var(--neon-pink), var(--neon-amber));"></div>
+            </div>
+
+            <p style="font-size: 11px; color: var(--text-main); margin-bottom: 22px;">Enter Master Password (<span style="color: var(--neon-pink);">AIMEISPRO</span>) to lift lockdown:</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 14px; align-items: center;">
+                <input type="password" id="lockdown-password-input" class="input" style="width: 100%; max-width: 340px; text-align: center; letter-spacing: 3px;" placeholder="ENTER AIMEISPRO">
+                <button class="btn btn-danger" onclick="handleUnlockAttempt('lockdown')" style="width: 100%; max-width: 340px;">Lift Lockdown & Enter</button>
+            </div>
+            <div id="lockdown-error-msg" style="color: var(--neon-pink); margin-top: 14px; display: none; font-size: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">ACCESS DENIED: INVALID MASTER KEY</div>
         </div>
     </div>
 
@@ -390,7 +428,7 @@
                 <button class="nav-tab" id="tab-owner-btn" onclick="switchTab('owner')" style="display:none; color: var(--neon-amber); border-color: rgba(255,183,3,0.4);">Owner Vault</button>
             </div>
 
-            <!-- TAB: STATS / ADVANCED REAL-TIME DATABASE ANALYTICS -->
+            <!-- TAB: STATS / ENHANCED FUTURISTIC ANALYTICS HUB -->
             <div id="tab-stats" class="tab-pane active">
                 <!-- Database Node Cluster Live Status Bar -->
                 <div class="db-status-bar">
@@ -456,6 +494,25 @@
                         <div style="height: 220px; position: relative; display: flex; justify-content: center;">
                             <canvas id="storageChart"></canvas>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Extra Analytics Cards -->
+                <div class="grid-3">
+                    <div class="glass-cyber" style="padding: 20px; display: flex; flex-direction: column; gap: 8px;">
+                        <span style="font-family:'Orbitron',sans-serif; font-size:9px; color:var(--text-sub); text-transform:uppercase;">Packet Loss Index</span>
+                        <span style="font-family:'Orbitron',sans-serif; font-size:22px; color:var(--neon-lime);">0.0014%</span>
+                        <span style="font-size:10px; color:var(--text-sub);">Transmission rate is optimal</span>
+                    </div>
+                    <div class="glass-cyber" style="padding: 20px; display: flex; flex-direction: column; gap: 8px;">
+                        <span style="font-family:'Orbitron',sans-serif; font-size:9px; color:var(--text-sub); text-transform:uppercase;">Encrypted Handshakes</span>
+                        <span style="font-family:'Orbitron',sans-serif; font-size:22px; color:var(--neon-purple);">4,821 / min</span>
+                        <span style="font-size:10px; color:var(--text-sub);">SHA-256 Validated</span>
+                    </div>
+                    <div class="glass-cyber" style="padding: 20px; display: flex; flex-direction: column; gap: 8px;">
+                        <span style="font-family:'Orbitron',sans-serif; font-size:9px; color:var(--text-sub); text-transform:uppercase;">Quantum Node Uptime</span>
+                        <span style="font-family:'Orbitron',sans-serif; font-size:22px; color:var(--neon-cyan);">99.998%</span>
+                        <span style="font-size:10px; color:var(--text-sub);">Zero degradation reported</span>
                     </div>
                 </div>
 
@@ -695,13 +752,21 @@
                         </div>
                     </div>
 
-                    <div style="background: rgba(255, 183, 3, 0.04); border: 1px solid rgba(255, 183, 3, 0.25); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 10px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <!-- TWO SEPARATE ACTION BOXES FOR UPDATE & LOCKDOWN -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(0, 240, 255, 0.04); border: 1px solid rgba(0, 240, 255, 0.25); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
                             <div>
-                                <h4 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-amber); text-transform: uppercase; letter-spacing: 1.5px;">Security Lockdown</h4>
-                                <p style="font-size: 11px; color: var(--text-sub); margin-top: 2px;">Immediately engages emergency lockdown protocol across all synced client terminals.</p>
+                                <h4 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px;">System Update Trigger</h4>
+                                <p style="font-size: 11px; color: var(--text-sub); margin-top: 4px;">Engages the spinning quantum update animation across all connected client nodes.</p>
                             </div>
-                            <button class="btn btn-primary" onclick="openLockdownModal()" style="background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); color: #fff; padding: 11px 22px;">🔒 Trigger Lockdown</button>
+                            <button class="btn btn-primary" onclick="openUpdateModal()" style="width: 100%;">⚡ Trigger Update Screen</button>
+                        </div>
+                        <div style="background: rgba(255, 0, 127, 0.04); border: 1px solid rgba(255, 0, 127, 0.25); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
+                            <div>
+                                <h4 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-pink); text-transform: uppercase; letter-spacing: 1.5px;">Emergency Lockdown Trigger</h4>
+                                <p style="font-size: 11px; color: var(--text-sub); margin-top: 4px;">Engages the pulsing crimson lockdown alert animation across client nodes.</p>
+                            </div>
+                            <button class="btn btn-danger" onclick="openLockdownModal()" style="width: 100%;">🚨 Trigger Lockdown Screen</button>
                         </div>
                     </div>
 
@@ -727,20 +792,38 @@
     </div>
 
     <!-- Modals -->
-    <div class="modal-overlay" id="vault-lockdown-popup">
-        <div class="modal glass-cyber" style="max-width: 500px; border-color: rgba(255, 183, 3, 0.5); box-shadow: 0 0 50px rgba(255, 183, 3, 0.25);">
+    <div class="modal-overlay" id="vault-update-popup">
+        <div class="modal glass-cyber" style="max-width: 500px; border-color: rgba(0, 240, 255, 0.5); box-shadow: 0 0 50px rgba(0, 240, 255, 0.25);">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-amber); font-size: 14px; font-weight: 900; letter-spacing: 1.5px;">⚡ CONFIRM SYSTEM LOCKDOWN</h3>
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 14px; font-weight: 900; letter-spacing: 1.5px;">⚡ CONFIRM SYSTEM UPDATE</h3>
+                <button class="btn btn-secondary btn-sm" onclick="closeUpdateModal()">✕ Close</button>
+            </div>
+            <p style="font-size: 12px; color: var(--text-sub); line-height: 1.5;">Are you sure you want to trigger the spinning update animation overlay across all connected client nodes?</p>
+            <div style="background: rgba(1, 4, 9, 0.7); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(0, 240, 255, 0.2);">
+                <span style="font-size: 10px; font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); text-transform: uppercase;">Master Cipher:</span>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #fff; margin-top: 3px; letter-spacing: 2px;">AIMEISPRO</div>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 4px;">
+                <button class="btn btn-secondary" onclick="closeUpdateModal()" style="flex: 1;">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmAndActivateUpdate()" style="flex: 1;">Engage Update Screen</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="vault-lockdown-popup">
+        <div class="modal glass-cyber" style="max-width: 500px; border-color: rgba(255, 0, 127, 0.5); box-shadow: 0 0 50px rgba(255, 0, 127, 0.25);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-pink); font-size: 14px; font-weight: 900; letter-spacing: 1.5px;">🚨 CONFIRM EMERGENCY LOCKDOWN</h3>
                 <button class="btn btn-secondary btn-sm" onclick="closeLockdownModal()">✕ Close</button>
             </div>
-            <p style="font-size: 12px; color: var(--text-sub); line-height: 1.5;">Are you sure you want to lock down the entire network? All connected interfaces will be instantly intercepted and secured behind the Master Vault cipher gate.</p>
-            <div style="background: rgba(1, 4, 9, 0.7); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255, 183, 3, 0.2);">
-                <span style="font-size: 10px; font-family: 'Orbitron', sans-serif; color: var(--neon-amber); text-transform: uppercase;">Unlock Password:</span>
-                <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #fff; margin-top: 3px; letter-spacing: 2px;">YOU think ima tell you;-;</div>
+            <p style="font-size: 12px; color: var(--text-sub); line-height: 1.5;">Are you sure you want to trigger the pulsing lockdown alert animation across all client nodes?</p>
+            <div style="background: rgba(1, 4, 9, 0.7); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255, 0, 127, 0.2);">
+                <span style="font-size: 10px; font-family: 'Orbitron', sans-serif; color: var(--neon-pink); text-transform: uppercase;">Master Cipher:</span>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #fff; margin-top: 3px; letter-spacing: 2px;">AIMEISPRO</div>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 4px;">
                 <button class="btn btn-secondary" onclick="closeLockdownModal()" style="flex: 1;">Cancel</button>
-                <button class="btn btn-primary" onclick="confirmAndActivateLockdown()" style="flex: 1; background: linear-gradient(135deg, var(--neon-amber), var(--neon-pink)); color: #fff;">Engage Lockdown</button>
+                <button class="btn btn-danger" onclick="confirmAndActivateLockdown()" style="flex: 1;">Engage Lockdown Screen</button>
             </div>
         </div>
     </div>
@@ -1147,6 +1230,7 @@
             settingsRef.get().then((doc) => {
                 if (!doc.exists) {
                     settingsRef.set({
+                        updateActive: false,
                         lockdown: false,
                         unlockPassword: "AIMEISPRO"
                     });
@@ -1156,9 +1240,10 @@
             }).catch((err) => console.error("Error checking doc:", err));
 
             const statusDiv = document.getElementById('connection-status');
+            const updateScreen = document.getElementById('update-screen');
             const lockdownOverlay = document.getElementById('lockdown-overlay');
-            const errorMsg = document.getElementById('error-msg');
-            const passwordInput = document.getElementById('password-input');
+            const updateErrorMsg = document.getElementById('update-error-msg');
+            const lockdownErrorMsg = document.getElementById('lockdown-error-msg');
 
             settingsRef.onSnapshot((doc) => {
                 if (doc.exists) {
@@ -1168,14 +1253,27 @@
                     }
 
                     const data = doc.data();
+                    const isUpdating = data.updateActive;
                     const isLocked = data.lockdown;
 
+                    // Handle Update Screen State
+                    if (isUpdating === true) {
+                        updateScreen.style.display = 'block';
+                    } else {
+                        updateScreen.style.display = 'none';
+                        if (updateErrorMsg) updateErrorMsg.style.display = 'none';
+                        const uInput = document.getElementById('update-password-input');
+                        if (uInput) uInput.value = '';
+                    }
+
+                    // Handle Lockdown Screen State
                     if (isLocked === true) {
                         lockdownOverlay.style.display = 'block';
                     } else {
                         lockdownOverlay.style.display = 'none';
-                        if (errorMsg) errorMsg.style.display = 'none';
-                        if (passwordInput) passwordInput.value = '';
+                        if (lockdownErrorMsg) lockdownErrorMsg.style.display = 'none';
+                        const lInput = document.getElementById('lockdown-password-input');
+                        if (lInput) lInput.value = '';
                     }
                 }
             }, (error) => {
@@ -1264,6 +1362,26 @@
             });
         }
 
+        // --- UPDATE SCREEN CONTROLS ---
+        function openUpdateModal() {
+            document.getElementById('vault-update-popup').style.display = 'flex';
+        }
+
+        function closeUpdateModal() {
+            document.getElementById('vault-update-popup').style.display = 'none';
+        }
+
+        function confirmAndActivateUpdate() {
+            closeUpdateModal();
+            settingsRef.update({ updateActive: true, unlockPassword: "AIMEISPRO" })
+                .then(() => {
+                    logAction("System update screen activated globally!");
+                    showToast("Update screen activated!");
+                })
+                .catch((error) => alert("Write failed: " + error.message));
+        }
+
+        // --- LOCKDOWN SCREEN CONTROLS ---
         function openLockdownModal() {
             document.getElementById('vault-lockdown-popup').style.display = 'flex';
         }
@@ -1274,44 +1392,38 @@
 
         function confirmAndActivateLockdown() {
             closeLockdownModal();
-            activateLockdown();
-        }
-
-        function activateLockdown() {
             settingsRef.update({ lockdown: true, unlockPassword: "AIMEISPRO" })
                 .then(() => {
-                    logAction("Owner Vault lockdown activated!");
-                    showToast("Owner Vault lockdown activated!");
+                    logAction("Emergency lockdown screen activated globally!");
+                    showToast("Lockdown screen activated!");
                 })
-                .catch((error) => {
-                    alert("Write failed! Check your Firestore Security Rules: " + error.message);
-                });
+                .catch((error) => alert("Write failed: " + error.message));
         }
 
-        function handleUnlockAttempt() {
-            const enteredValue = document.getElementById('password-input').value;
-            const errorMsg = document.getElementById('error-msg');
+        // --- UNLOCK BYPASS HANDLER ---
+        function handleUnlockAttempt(screenType) {
+            const inputId = screenType === 'update' ? 'update-password-input' : 'lockdown-password-input';
+            const errorId = screenType === 'update' ? 'update-error-msg' : 'lockdown-error-msg';
+            const enteredValue = document.getElementById(inputId).value;
+            const errorMsg = document.getElementById(errorId);
 
             settingsRef.get().then((doc) => {
                 if (doc.exists) {
                     const correctPassword = doc.data().unlockPassword || "AIMEISPRO";
 
                     if (enteredValue === correctPassword) {
-                        settingsRef.update({ lockdown: false })
+                        const updateObj = screenType === 'update' ? { updateActive: false } : { lockdown: false };
+                        settingsRef.update(updateObj)
                             .then(() => {
-                                logAction("Owner Vault unlocked globally!");
-                                showToast("Owner Vault unlocked globally!");
+                                logAction(`System ${screenType} screen bypassed successfully!`);
+                                showToast("Matrix unlocked successfully!");
                             })
-                            .catch((error) => {
-                                console.error("Unlock update failed:", error);
-                            });
+                            .catch((error) => console.error("Unlock failed:", error));
                     } else {
                         errorMsg.style.display = 'block';
                     }
                 }
-            }).catch((error) => {
-                console.error("Error verifying password:", error);
-            });
+            }).catch((error) => console.error("Error verifying password:", error));
         }
 
         function renderGlobalChatUI() {
@@ -1336,7 +1448,6 @@
                     }
                 }
 
-                // Support both schema naming conventions (username/sender, text/message) to maintain cross-website compatibility
                 const senderName = msg.username || msg.sender || msg.name || 'Anonymous';
                 const messageText = msg.text || msg.message || '';
 
@@ -1378,9 +1489,9 @@
             try {
                 await db.collection('global_chat').add({
                     username: senderHandle,
-                    sender: senderHandle, // Populating both fields ensures cross-site compatibility with other client frontends
+                    sender: senderHandle,
                     text: textValue,
-                    message: textValue,  // Populating both fields ensures compatibility with external web apps
+                    message: textValue,
                     replyTo: replyingToChatId || null,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
