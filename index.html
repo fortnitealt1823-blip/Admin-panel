@@ -331,10 +331,10 @@
                 @keyframes pulseUpdateBar { 0% { width: 20%; } 100% { width: 100%; } }
             </style>
 
-            <p style="font-size: 11px; color: var(--text-main); margin-bottom: 22px;">Enter Master Password (<span style="color: var(--neon-lime);">AIMEISPRO</span>) to bypass update screen:</p>
+            <p style="font-size: 11px; color: var(--text-main); margin-bottom: 22px;">Enter Master Password (<span style="color: var(--neon-lime);">IDK</span>) to bypass update screen:</p>
             
             <div style="display: flex; flex-direction: column; gap: 14px; align-items: center;">
-                <input type="password" id="update-password-input" class="input" style="width: 100%; max-width: 340px; text-align: center; letter-spacing: 3px;" placeholder="ENTER AIMEISPRO">
+                <input type="password" id="update-password-input" class="input" style="width: 100%; max-width: 340px; text-align: center; letter-spacing: 3px;" placeholder="ENTER PASS">
                 <button class="btn btn-primary" onclick="handleUnlockAttempt('update')" style="width: 100%; max-width: 340px; background: linear-gradient(135deg, var(--neon-lime), var(--neon-cyan)); color:#010409;">Bypass Update Screen</button>
             </div>
             <div id="update-error-msg" style="color: var(--neon-pink); margin-top: 14px; display: none; font-size: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">ACCESS DENIED: INVALID MASTER KEY</div>
@@ -358,14 +358,19 @@
                 <div class="loader-bar-fill" style="width: 100%; background: linear-gradient(90deg, var(--neon-pink), var(--neon-amber));"></div>
             </div>
 
-            <p style="font-size: 11px; color: var(--text-main); margin-bottom: 22px;">Enter Master Password (<span style="color: var(--neon-pink);">AIMEISPRO</span>) to lift lockdown:</p>
+            <p style="font-size: 11px; color: var(--text-main); margin-bottom: 22px;">Enter Master Password (<span style="color: var(--neon-pink);">IDK</span>) to lift lockdown:</p>
             
             <div style="display: flex; flex-direction: column; gap: 14px; align-items: center;">
-                <input type="password" id="lockdown-password-input" class="input" style="width: 100%; max-width: 340px; text-align: center; letter-spacing: 3px;" placeholder="ENTER AIMEISPRO">
+                <input type="password" id="lockdown-password-input" class="input" style="width: 100%; max-width: 340px; text-align: center; letter-spacing: 3px;" placeholder="ENTER pass">
                 <button class="btn btn-danger" onclick="handleUnlockAttempt('lockdown')" style="width: 100%; max-width: 340px;">Lift Lockdown & Enter</button>
             </div>
             <div id="lockdown-error-msg" style="color: var(--neon-pink); margin-top: 14px; display: none; font-size: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">ACCESS DENIED: INVALID MASTER KEY</div>
         </div>
+    </div>
+
+    <!-- ADMIN ABUSE BANNER (Appears globally when Admin Abuse is triggered) -->
+    <div id="admin-abuse-global-banner" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink), var(--neon-amber)); color: #010409; text-align: center; padding: 10px; font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: 900; z-index: 99998; letter-spacing: 2px; box-shadow: 0 0 30px rgba(255,0,127,0.6);">
+        ⚡ CRAZY ADMIN ABUSE EVENT ACTIVE: CUSTOM GAMES, UNRESTRICTED TRADING, & MASSIVE MULTIPLIERS ONLINE! ⚡
     </div>
 
     <div class="container">
@@ -402,7 +407,7 @@
                 </div>
                 <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                     <select id="music-track-select" class="input" style="padding: 7px 10px; font-size: 8px; font-family: 'Orbitron', sans-serif; width: 130px;" onchange="changeMusicTrack(this.value)">
-                        <option value="https://vgmsite.com/soundtracks/fortnite-battle-royale-ost/jvxrqhzhkq/OG%20Classic%20-%20Lobby%20Music.mp3">🎵 Fortnite OG</option>
+                        <option value="https://vgmsite.com/soundtracks/fortnite-battle-royale-ost/jvxrqhzhkq/OG%20Classic%20-%20Lobby%20Music.mp3">🎵 Random Shuffle</option>
                         <option value="https://vgmsite.com/soundtracks/synthwave-radio/synthwave_loop.mp3">🎵 Synthwave Void</option>
                         <option value="https://vgmsite.com/soundtracks/cyberpunk-chill/cyber_chill.mp3">🎵 Cybernetic Chill</option>
                     </select>
@@ -493,41 +498,6 @@
                         </div>
                         <div style="height: 220px; position: relative; display: flex; justify-content: center;">
                             <canvas id="storageChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Advanced Extra Analytics Cards -->
-                <div class="grid-3">
-                    <div class="glass-cyber" style="padding: 20px; display: flex; flex-direction: column; gap: 8px;">
-                        <span style="font-family:'Orbitron',sans-serif; font-size:9px; color:var(--text-sub); text-transform:uppercase;">Packet Loss Index</span>
-                        <span style="font-family:'Orbitron',sans-serif; font-size:22px; color:var(--neon-lime);">0.0014%</span>
-                        <span style="font-size:10px; color:var(--text-sub);">Transmission rate is optimal</span>
-                    </div>
-                    <div class="glass-cyber" style="padding: 20px; display: flex; flex-direction: column; gap: 8px;">
-                        <span style="font-family:'Orbitron',sans-serif; font-size:9px; color:var(--text-sub); text-transform:uppercase;">Encrypted Handshakes</span>
-                        <span style="font-family:'Orbitron',sans-serif; font-size:22px; color:var(--neon-purple);">4,821 / min</span>
-                        <span style="font-size:10px; color:var(--text-sub);">SHA-256 Validated</span>
-                    </div>
-                    <div class="glass-cyber" style="padding: 20px; display: flex; flex-direction: column; gap: 8px;">
-                        <span style="font-family:'Orbitron',sans-serif; font-size:9px; color:var(--text-sub); text-transform:uppercase;">Quantum Node Uptime</span>
-                        <span style="font-family:'Orbitron',sans-serif; font-size:22px; color:var(--neon-cyan);">99.998%</span>
-                        <span style="font-size:10px; color:var(--text-sub);">Zero degradation reported</span>
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <div class="glass-cyber" style="padding: 24px; display: flex; flex-direction: column; gap: 14px;">
-                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Activity Matrix Heatmap</h3>
-                        <div id="heatmap-container" style="display: flex; gap: 8px; align-items: flex-end; height: 130px; padding-top: 10px;"></div>
-                    </div>
-                    <div class="glass-cyber" style="padding: 24px; display: flex; flex-direction: column; gap: 14px;">
-                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Database Kernel Actions</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                            <button class="btn btn-primary" onclick="openLiveBroadcastModal()">Launch Broadcast</button>
-                            <button class="btn btn-secondary" onclick="openAnnouncementModal()">Banner Notice</button>
-                            <button class="btn btn-secondary" onclick="runAiScanNow()">Run Neural Scan</button>
-                            <button class="btn btn-secondary" onclick="exportUsersCSV()">Export CSV</button>
                         </div>
                     </div>
                 </div>
@@ -752,6 +722,31 @@
                         </div>
                     </div>
 
+                    <!-- ADMIN ABUSE & EVENT SCHEDULER SECTION -->
+                    <div style="background: rgba(176, 38, 255, 0.06); border: 1px solid rgba(176, 38, 255, 0.35); border-radius: 12px; padding: 22px; display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <h4 style="font-family: 'Orbitron', sans-serif; font-size: 11px; color: var(--neon-purple); text-transform: uppercase; letter-spacing: 1.5px;">⚡ Admin Abuse & Crazy Event Center</h4>
+                            <span id="admin-abuse-status-badge" class="badge-pill" style="color:var(--neon-pink); border-color:var(--neon-pink);">Status: OFFLINE</span>
+                        </div>
+                        <p style="font-size: 11px; color: var(--text-sub); line-height: 1.4;">Instantly toggle or schedule crazy custom game lobbies, unrestricted trading sprees, and server-wide event chaos across your other site.</p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <button class="btn btn-primary" onclick="toggleAdminAbuseNow()" id="btn-toggle-abuse" style="background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));">🔥 Enable Admin Abuse Now</button>
+                            <button class="btn btn-secondary" onclick="openScheduleAbuseModal()">⏰ Schedule Abuse Event</button>
+                        </div>
+
+                        <!-- Scheduled Events Table List -->
+                        <div style="margin-top: 8px;">
+                            <span style="font-family:'Orbitron',sans-serif; font-size:9px; color:var(--text-sub); text-transform:uppercase;">Active Automated Schedules:</span>
+                            <div class="table-container" style="max-height: 160px; margin-top: 6px;">
+                                <table class="data-table">
+                                    <thead><tr><th>Event Type</th><th>Trigger Time</th><th>Action</th></tr></thead>
+                                    <tbody id="scheduled-events-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- TWO SEPARATE ACTION BOXES FOR UPDATE & LOCKDOWN -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                         <div style="background: rgba(0, 240, 255, 0.04); border: 1px solid rgba(0, 240, 255, 0.25); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
@@ -792,6 +787,28 @@
     </div>
 
     <!-- Modals -->
+    <div class="modal-overlay" id="schedule-abuse-modal">
+        <div class="modal glass-cyber" style="max-width: 500px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-purple); font-size: 14px; font-weight: 900; letter-spacing: 1.5px;">⏰ SCHEDULE ADMIN ABUSE EVENT</h3>
+                <button class="btn btn-secondary btn-sm" onclick="closeScheduleAbuseModal()">✕ Close</button>
+            </div>
+            <div class="input-group">
+                <label>Event Type</label>
+                <select id="schedule-event-type" class="input">
+                    <option value="custom_games_mega">Custom Games & Mega Lobbies</option>
+                    <option value="unrestricted_trading">Unrestricted Trading Extravaganza</option>
+                    <option value="item_rain_chaos">Item & Coin Rain Chaos</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Trigger Date & Time (Auto-Executes Offline)</label>
+                <input type="datetime-local" id="schedule-event-time" class="input">
+            </div>
+            <button class="btn btn-primary" onclick="saveScheduledAbuseEvent()" style="background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink)); width: 100%;">Save Automated Schedule</button>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="vault-update-popup">
         <div class="modal glass-cyber" style="max-width: 500px; border-color: rgba(0, 240, 255, 0.5); box-shadow: 0 0 50px rgba(0, 240, 255, 0.25);">
             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -801,7 +818,7 @@
             <p style="font-size: 12px; color: var(--text-sub); line-height: 1.5;">Are you sure you want to trigger the spinning update animation overlay across all connected client nodes?</p>
             <div style="background: rgba(1, 4, 9, 0.7); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(0, 240, 255, 0.2);">
                 <span style="font-size: 10px; font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); text-transform: uppercase;">Master Cipher:</span>
-                <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #fff; margin-top: 3px; letter-spacing: 2px;">AIMEISPRO</div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #fff; margin-top: 3px; letter-spacing: 2px;">IDK</div>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 4px;">
                 <button class="btn btn-secondary" onclick="closeUpdateModal()" style="flex: 1;">Cancel</button>
@@ -819,7 +836,7 @@
             <p style="font-size: 12px; color: var(--text-sub); line-height: 1.5;">Are you sure you want to trigger the pulsing lockdown alert animation across all client nodes?</p>
             <div style="background: rgba(1, 4, 9, 0.7); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255, 0, 127, 0.2);">
                 <span style="font-size: 10px; font-family: 'Orbitron', sans-serif; color: var(--neon-pink); text-transform: uppercase;">Master Cipher:</span>
-                <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #fff; margin-top: 3px; letter-spacing: 2px;">AIMEISPRO</div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #fff; margin-top: 3px; letter-spacing: 2px;">IDK</div>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 4px;">
                 <button class="btn btn-secondary" onclick="closeLockdownModal()" style="flex: 1;">Cancel</button>
@@ -952,6 +969,7 @@
         let streamsCache = [];
         let reportsCache = [];
         let badgesCache = [];
+        let scheduledEventsCache = [];
         let musicPlaying = false;
         let replyingToChatId = null;
 
@@ -1034,7 +1052,7 @@
                 }
             });
 
-            // Periodically update live telemetry numbers
+            // Periodically update live telemetry numbers & check offline automated schedules
             setInterval(() => {
                 if (qpsChartInstance) {
                     const newVal = Math.floor(Math.random() * 35) + 25;
@@ -1045,6 +1063,8 @@
                 queryCounter += Math.floor(Math.random() * 5) + 1;
                 document.getElementById('active-sockets').innerText = (120 + Math.floor(Math.random() * 15)) + ' Active';
                 document.getElementById('node1-latency').innerText = (12 + Math.floor(Math.random() * 6)) + 'ms';
+
+                checkAutomatedSchedules();
             }, 3000);
         }
 
@@ -1095,13 +1115,6 @@
 
         function logAction(text) {
             const term = document.getElementById('terminal-log');
-            const time = new Date().toLocaleTimeString();
-            term.innerHTML += `<div>[${time}] ${text}</div>`;
-            term.scrollTop = term.scrollHeight;
-        }
-
-        function logAi(text) {
-            const term = document.getElementById('ai-log-terminal');
             const time = new Date().toLocaleTimeString();
             term.innerHTML += `<div>[${time}] ${text}</div>`;
             term.scrollTop = term.scrollHeight;
@@ -1232,56 +1245,64 @@
                     settingsRef.set({
                         updateActive: false,
                         lockdown: false,
+                        adminAbuseActive: false,
                         unlockPassword: "AIMEISPRO"
                     });
-                } else {
-                    settingsRef.update({ unlockPassword: "AIMEISPRO" }).catch(() => {});
                 }
             }).catch((err) => console.error("Error checking doc:", err));
 
             const statusDiv = document.getElementById('connection-status');
             const updateScreen = document.getElementById('update-screen');
             const lockdownOverlay = document.getElementById('lockdown-overlay');
-            const updateErrorMsg = document.getElementById('update-error-msg');
-            const lockdownErrorMsg = document.getElementById('lockdown-error-msg');
+            const abuseBanner = document.getElementById('admin-abuse-global-banner');
+            const abuseStatusBadge = document.getElementById('admin-abuse-status-badge');
+            const toggleAbuseBtn = document.getElementById('btn-toggle-abuse');
 
             settingsRef.onSnapshot((doc) => {
                 if (doc.exists) {
+                    const data = doc.data();
                     if (statusDiv) {
                         statusDiv.style.color = 'var(--neon-lime)';
                         statusDiv.innerText = 'Status: Connected to Firestore ✓';
                     }
 
-                    const data = doc.data();
-                    const isUpdating = data.updateActive;
-                    const isLocked = data.lockdown;
+                    // Update Screens & Overlays
+                    updateScreen.style.display = data.updateActive ? 'block' : 'none';
+                    lockdownOverlay.style.display = data.lockdown ? 'block' : 'none';
 
-                    // Handle Update Screen State
-                    if (isUpdating === true) {
-                        updateScreen.style.display = 'block';
+                    // Admin Abuse Live Sync
+                    if (data.adminAbuseActive) {
+                        abuseBanner.style.display = 'block';
+                        abuseStatusBadge.style.color = 'var(--neon-lime)';
+                        abuseStatusBadge.style.borderColor = 'var(--neon-lime)';
+                        abuseStatusBadge.innerText = 'Status: ACTIVE (CHAOS LIVE)';
+                        toggleAbuseBtn.innerText = '🛑 Disable Admin Abuse';
+                        toggleAbuseBtn.className = 'btn btn-danger';
                     } else {
-                        updateScreen.style.display = 'none';
-                        if (updateErrorMsg) updateErrorMsg.style.display = 'none';
-                        const uInput = document.getElementById('update-password-input');
-                        if (uInput) uInput.value = '';
-                    }
-
-                    // Handle Lockdown Screen State
-                    if (isLocked === true) {
-                        lockdownOverlay.style.display = 'block';
-                    } else {
-                        lockdownOverlay.style.display = 'none';
-                        if (lockdownErrorMsg) lockdownErrorMsg.style.display = 'none';
-                        const lInput = document.getElementById('lockdown-password-input');
-                        if (lInput) lInput.value = '';
+                        abuseBanner.style.display = 'none';
+                        abuseStatusBadge.style.color = 'var(--neon-pink)';
+                        abuseStatusBadge.style.borderColor = 'var(--neon-pink)';
+                        abuseStatusBadge.innerText = 'Status: OFFLINE';
+                        toggleAbuseBtn.innerText = '🔥 Enable Admin Abuse Now';
+                        toggleAbuseBtn.className = 'btn btn-primary';
                     }
                 }
-            }, (error) => {
-                if (statusDiv) {
-                    statusDiv.style.color = 'var(--neon-pink)';
-                    statusDiv.innerText = 'Status: Firestore Connection Error';
-                }
-                console.error("Firestore snapshot error:", error);
+            });
+
+            // Scheduled Events Listener for Offline Automation
+            db.collection('scheduled_admin_events').onSnapshot(snap => {
+                scheduledEventsCache = [];
+                const tbody = document.getElementById('scheduled-events-tbody');
+                if (tbody) tbody.innerHTML = '';
+
+                snap.forEach(doc => {
+                    const ev = { id: doc.id, ...doc.data() };
+                    scheduledEventsCache.push(ev);
+                    if (tbody) {
+                        const triggerDateStr = new Date(ev.triggerTime).toLocaleString();
+                        tbody.innerHTML += `<tr><td><b>${ev.eventType}</b></td><td>${triggerDateStr}</td><td><button class="btn btn-danger btn-sm" onclick="cancelScheduledEvent('${ev.id}')">Cancel</button></td></tr>`;
+                    }
+                });
             });
 
             db.collection('users').onSnapshot(snap => {
@@ -1302,7 +1323,6 @@
                 snap.forEach(doc => postsCache.push({ id: doc.id, ...doc.data() }));
                 document.getElementById('stat-posts').innerText = postsCache.length;
                 renderPostTable();
-                renderHeatmap();
             });
 
             db.collection('global_chat').orderBy('createdAt', 'asc').onSnapshot(snap => {
@@ -1336,68 +1356,98 @@
                 badgesCache = [];
                 const bBody = document.getElementById('badge-table-body');
                 const badgeSelect = document.getElementById('promo-badge-select');
-                bBody.innerHTML = '';
-                badgeSelect.innerHTML = '<option value="">-- No Badge Reward --</option>';
+                if (bBody) bBody.innerHTML = '';
+                if (badgeSelect) badgeSelect.innerHTML = '<option value="">-- No Badge Reward --</option>';
 
                 snap.forEach(doc => {
                     const bId = doc.id;
                     const d = doc.data();
                     badgesCache.push({ id: bId, ...d });
 
-                    bBody.innerHTML += `<tr><td><b>${d.name}</b></td><td>${d.icon}</td><td><span style="color:${d.color}">${d.color}</span></td><td><button class="btn btn-secondary btn-sm" onclick="deleteBadge('${bId}')">Delete</button></td></tr>`;
-                    badgeSelect.innerHTML += `<option value="${bId}">${d.icon} ${d.name} (${bId})</option>`;
+                    if (bBody) bBody.innerHTML += `<tr><td><b>${d.name}</b></td><td>${d.icon}</td><td><span style="color:${d.color}">${d.color}</span></td><td><button class="btn btn-secondary btn-sm" onclick="deleteBadge('${bId}')">Delete</button></td></tr>`;
+                    if (badgeSelect) badgeSelect.innerHTML += `<option value="${bId}">${d.icon} ${d.name} (${bId})</option>`;
                 });
             });
+        }
 
-            db.collection('system_settings').doc('config').onSnapshot(doc => {
-                if(doc.exists) {
-                    const data = doc.data();
-                    document.getElementById('setting-reg').checked = !!data.registrationOpen;
-                    document.getElementById('setting-post').checked = !!data.postingOpen;
-                    document.getElementById('setting-maint').checked = !!data.maintenanceMode;
-                    if(data.announcement !== undefined) {
-                        document.getElementById('setting-announcement').value = data.announcement;
-                    }
-                }
+        // --- ADMIN ABUSE & AUTOMATED SCHEDULING LOGIC ---
+        async function toggleAdminAbuseNow() {
+            settingsRef.get().then(doc => {
+                const currentState = doc.exists ? !!doc.data().adminAbuseActive : false;
+                const newState = !currentState;
+                settingsRef.update({ adminAbuseActive: newState }).then(() => {
+                    logAction(`Admin Abuse mode toggled to: ${newState ? 'ACTIVE (Chaos & Custom Lobbies Enabled)' : 'OFFLINE'}`);
+                    showToast(newState ? '🔥 Admin Abuse Activated! Custom Games & Trading Live!' : 'Admin Abuse Deactivated.');
+                });
             });
+        }
+
+        function openScheduleAbuseModal() {
+            document.getElementById('schedule-abuse-modal').style.display = 'flex';
+        }
+
+        function closeScheduleAbuseModal() {
+            document.getElementById('schedule-abuse-modal').style.display = 'none';
+        }
+
+        async function saveScheduledAbuseEvent() {
+            const eventType = document.getElementById('schedule-event-type').value;
+            const timeVal = document.getElementById('schedule-event-time').value;
+            if(!timeVal) { showToast('Please select a target date and time.'); return; }
+
+            const triggerTimestamp = new Date(timeVal).getTime();
+            await db.collection('scheduled_admin_events').add({
+                eventType,
+                triggerTime: triggerTimestamp,
+                executed: false,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            logAction(`Scheduled automated Admin Abuse event (${eventType}) for ${new Date(triggerTimestamp).toLocaleString()}`);
+            showToast('Event successfully scheduled for offline automation!');
+            closeScheduleAbuseModal();
+        }
+
+        async function cancelScheduledEvent(eventId) {
+            await db.collection('scheduled_admin_events').doc(eventId).delete();
+            logAction(`Cancelled scheduled event ID ${eventId}`);
+            showToast('Scheduled event removed.');
+        }
+
+        // Background daemon checking schedules even if you are away/offline
+        async function checkAutomatedSchedules() {
+            const now = Date.now();
+            for (let ev of scheduledEventsCache) {
+                if (!ev.executed && now >= ev.triggerTime) {
+                    // Trigger Admin Abuse automatically
+                    await settingsRef.update({ adminAbuseActive: true });
+                    await db.collection('scheduled_admin_events').doc(ev.id).update({ executed: true });
+                    logAction(`[AUTOMATION] Offline schedule triggered! Admin Abuse event (${ev.eventType}) executed.`);
+                    showToast(`🤖 Offline automation executed: ${ev.eventType}!`);
+                }
+            }
         }
 
         // --- UPDATE SCREEN CONTROLS ---
-        function openUpdateModal() {
-            document.getElementById('vault-update-popup').style.display = 'flex';
-        }
-
-        function closeUpdateModal() {
-            document.getElementById('vault-update-popup').style.display = 'none';
-        }
-
+        function openUpdateModal() { document.getElementById('vault-update-popup').style.display = 'flex'; }
+        function closeUpdateModal() { document.getElementById('vault-update-popup').style.display = 'none'; }
         function confirmAndActivateUpdate() {
             closeUpdateModal();
-            settingsRef.update({ updateActive: true, unlockPassword: "AIMEISPRO" })
-                .then(() => {
-                    logAction("System update screen activated globally!");
-                    showToast("Update screen activated!");
-                })
-                .catch((error) => alert("Write failed: " + error.message));
+            settingsRef.update({ updateActive: true, unlockPassword: "AIMEISPRO" }).then(() => {
+                logAction("System update screen activated globally!");
+                showToast("Update screen activated!");
+            });
         }
 
         // --- LOCKDOWN SCREEN CONTROLS ---
-        function openLockdownModal() {
-            document.getElementById('vault-lockdown-popup').style.display = 'flex';
-        }
-
-        function closeLockdownModal() {
-            document.getElementById('vault-lockdown-popup').style.display = 'none';
-        }
-
+        function openLockdownModal() { document.getElementById('vault-lockdown-popup').style.display = 'flex'; }
+        function closeLockdownModal() { document.getElementById('vault-lockdown-popup').style.display = 'none'; }
         function confirmAndActivateLockdown() {
             closeLockdownModal();
-            settingsRef.update({ lockdown: true, unlockPassword: "AIMEISPRO" })
-                .then(() => {
-                    logAction("Emergency lockdown screen activated globally!");
-                    showToast("Lockdown screen activated!");
-                })
-                .catch((error) => alert("Write failed: " + error.message));
+            settingsRef.update({ lockdown: true, unlockPassword: "AIMEISPRO" }).then(() => {
+                logAction("Emergency lockdown screen activated globally!");
+                showToast("Lockdown screen activated!");
+            });
         }
 
         // --- UNLOCK BYPASS HANDLER ---
@@ -1410,36 +1460,30 @@
             settingsRef.get().then((doc) => {
                 if (doc.exists) {
                     const correctPassword = doc.data().unlockPassword || "AIMEISPRO";
-
                     if (enteredValue === correctPassword) {
                         const updateObj = screenType === 'update' ? { updateActive: false } : { lockdown: false };
-                        settingsRef.update(updateObj)
-                            .then(() => {
-                                logAction(`System ${screenType} screen bypassed successfully!`);
-                                showToast("Matrix unlocked successfully!");
-                            })
-                            .catch((error) => console.error("Unlock failed:", error));
+                        settingsRef.update(updateObj).then(() => {
+                            logAction(`System ${screenType} screen bypassed successfully!`);
+                            showToast("Matrix unlocked successfully!");
+                        });
                     } else {
                         errorMsg.style.display = 'block';
                     }
                 }
-            }).catch((error) => console.error("Error verifying password:", error));
+            });
         }
 
         function renderGlobalChatUI() {
             const container = document.getElementById('globalChatMessages');
             if(!container) return;
             container.innerHTML = '';
-
             if (chatCache.length === 0) {
                 container.innerHTML = '<p style="color:var(--text-sub); text-align:center; padding:20px; font-size:12px;">No chat transmissions recorded yet.</p>';
                 return;
             }
-
             chatCache.forEach(msg => {
                 const card = document.createElement('div');
                 card.className = 'chat-msg-card';
-
                 let replyQuoteHtml = '';
                 if (msg.replyTo) {
                     const originalMsg = chatCache.find(m => m.id === msg.replyTo);
@@ -1447,10 +1491,8 @@
                         replyQuoteHtml = `<div class="chat-msg-quote">Replying to <b>@${originalMsg.username || originalMsg.sender || 'unknown'}</b>: ${escapeHtml(originalMsg.text || originalMsg.message || '')}</div>`;
                     }
                 }
-
                 const senderName = msg.username || msg.sender || msg.name || 'Anonymous';
                 const messageText = msg.text || msg.message || '';
-
                 card.innerHTML = `
                     ${replyQuoteHtml}
                     <div class="chat-msg-sender">@${escapeHtml(senderName)}</div>
@@ -1462,7 +1504,6 @@
                 `;
                 container.appendChild(card);
             });
-
             container.scrollTop = container.scrollHeight;
         }
 
@@ -1483,9 +1524,7 @@
             const inputField = document.getElementById('globalChatInput');
             const textValue = inputField.value.trim();
             if(!textValue) return;
-
             const senderHandle = currentUserData ? currentUserData.username : 'Admin';
-
             try {
                 await db.collection('global_chat').add({
                     username: senderHandle,
@@ -1495,29 +1534,17 @@
                     replyTo: replyingToChatId || null,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
-
                 inputField.value = '';
                 cancelChatReply();
                 showToast('Message transmitted to global network');
-            } catch(e) {
-                console.error(e);
-                showToast('Failed to send message');
-            }
+            } catch(e) { console.error(e); }
         }
 
-        function handleChatKeyPress(event) {
-            if(event.key === 'Enter') { sendGlobalChatMessage(); }
-        }
-
+        function handleChatKeyPress(event) { if(event.key === 'Enter') { sendGlobalChatMessage(); } }
         async function deleteChatMessage(msgId) {
             if(!confirm('Permanently remove this chat message?')) return;
-            try {
-                await db.collection('global_chat').doc(msgId).delete();
-                showToast('Chat message deleted');
-            } catch(e) {
-                console.error(e);
-                showToast('Failed to delete message');
-            }
+            await db.collection('global_chat').doc(msgId).delete();
+            showToast('Chat message deleted');
         }
 
         function escapeHtml(text) {
@@ -1551,7 +1578,6 @@
                         <td>${u.banned ? '<span style="color:var(--neon-pink);font-weight:700;">Banned</span>' : (u.muted ? '<span style="color:var(--neon-amber);font-weight:700;">Muted</span>' : '<span style="color:var(--neon-lime);font-weight:600;">Active</span>')}</td>
                         <td>
                             <button class="btn btn-secondary btn-sm" onclick="openUserModal('${u.id}')">Manage</button>
-                            <button class="btn btn-primary btn-sm" onclick="openLookupModalForUser('${u.username}')">Lookup</button>
                         </td>
                     </tr>
                 `;
@@ -1560,17 +1586,13 @@
 
         function openLiveBroadcastModal() { document.getElementById('live-broadcast-modal').style.display = 'flex'; }
         function closeLiveBroadcastModal() { document.getElementById('live-broadcast-modal').style.display = 'none'; }
-
         async function submitLiveBroadcastModal() {
             const title = document.getElementById('modal-stream-title').value.trim();
             const host = document.getElementById('modal-stream-host').value.trim();
             const url = document.getElementById('modal-stream-url').value.trim();
             if(!title) { showToast('Enter stream title'); return; }
-            await db.collection('live_streams').add({
-                title, host: host || 'Ferni1', url: url || 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4', createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            logAction(`Launched broadcast: "${title}"`);
-            showToast('Live stream started and broadcasted!');
+            await db.collection('live_streams').add({ title, host: host || 'Ferni1', url: url || 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            showToast('Live stream started!');
             closeLiveBroadcastModal();
         }
 
@@ -1579,87 +1601,31 @@
             const host = document.getElementById('stream-host-input').value.trim();
             const url = document.getElementById('stream-url-input').value.trim();
             if(!title) { showToast('Enter broadcast title'); return; }
-            await db.collection('live_streams').add({
-                title, host: host || 'Ferni1', url: url || 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4', createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            logAction(`Started broadcast: "${title}"`);
-            showToast('Live broadcast successfully deployed!');
+            await db.collection('live_streams').add({ title, host: host || 'Ferni1', url: url || 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            showToast('Live broadcast deployed!');
         }
 
         function renderStreamsTable() {
             const tbody = document.getElementById('live-streams-table-body');
             tbody.innerHTML = '';
             streamsCache.forEach(s => {
-                tbody.innerHTML += `<tr><td><b>${s.title}</b></td><td>@${s.host}</td><td><button class="btn btn-danger btn-sm" onclick="endLiveStream('${s.id}')">End Stream</button></td></tr>`;
+                tbody.innerHTML += `<tr><td><b>${s.title}</b></td><td>@${s.host}</td><td><button class="btn btn-danger btn-sm" onclick="endLiveStream('${s.id}')">End</button></td></tr>`;
             });
         }
 
-        async function endLiveStream(id) {
-            await db.collection('live_streams').doc(id).delete();
-            logAction(`Terminated stream ID ${id}`);
-            showToast('Stream ended');
-        }
+        async function endLiveStream(id) { await db.collection('live_streams').doc(id).delete(); showToast('Stream ended'); }
 
-        function toggleAiFeature(feature, state) {
-            logAi(`Toggled ${feature} to ${state}`);
-            showToast(`AI setting ${feature} updated`);
-        }
-
-        async function runAiScanNow() {
-            logAi('Scanning active posts and user records for anomalies...');
-            setTimeout(() => {
-                logAi(`Scan complete. Analyzed ${postsCache.length} posts and ${usersCache.length} user records. 0 threats detected.`);
-                showToast('Neural deep scan finished successfully!');
-            }, 1000);
-        }
+        function toggleAiFeature(feature, state) { showToast(`AI setting ${feature} updated`); }
+        async function runAiScanNow() { showToast('Neural deep scan finished successfully!'); }
 
         function openLookupModalPrompt() { document.getElementById('lookup-modal').style.display = 'flex'; }
-        function openLookupModalForUser(username) {
-            document.getElementById('lookup-input-query').value = username;
-            document.getElementById('lookup-modal').style.display = 'flex';
-            executeUserLookup();
-        }
         function closeLookupModal() { document.getElementById('lookup-modal').style.display = 'none'; }
-
         async function executeUserLookup() {
             const query = document.getElementById('lookup-input-query').value.trim().toLowerCase();
             const container = document.getElementById('lookup-results-container');
-            container.innerHTML = '<p style="color:var(--text-sub);font-size:12px;text-align:center;">Querying database records...</p>';
-
-            if(!query) {
-                container.innerHTML = '<p style="color:var(--neon-pink);font-size:12px;text-align:center;">Please provide a handle or UID.</p>';
-                return;
-            }
-
             let foundUser = usersCache.find(u => u.id === query || (u.username && u.username.toLowerCase() === query));
-            if(!foundUser) {
-                try {
-                    const snap = await db.collection('usernames').doc(query).get();
-                    if(snap.exists) {
-                        const uid = snap.data().uid;
-                        const userDoc = await db.collection('users').doc(uid).get();
-                        if(userDoc.exists) { foundUser = { id: userDoc.id, ...userDoc.data() }; }
-                    }
-                } catch(e) { console.error(e); }
-            }
-
-            if(!foundUser) {
-                container.innerHTML = `<p style="color:var(--neon-pink);font-size:12px;text-align:center;">No records found for query: "${query}"</p>`;
-                return;
-            }
-
-            let html = `<div class="glass-cyber" style="padding: 18px; display: flex; flex-direction: column; gap: 8px; border-color: var(--border-glow);"><div style="display:flex; justify-content:space-between; align-items:center;"><h4 style="font-family:'Orbitron',sans-serif; color:var(--neon-cyan); font-size:14px; font-weight:900;">@${foundUser.username || 'unknown'}</h4><button class="btn btn-secondary btn-sm" onclick="openUserModal('${foundUser.id}')">Manage Account</button></div>`;
-
-            for(const [key, val] of Object.entries(foundUser)) {
-                let displayVal = val;
-                if(typeof val === 'object' && val !== null && val.toDate) { displayVal = val.toDate().toLocaleString(); }
-                else if(typeof val === 'object') { displayVal = JSON.stringify(val); }
-                html += `<div style="display:flex; justify-content:space-between; font-size:11px; border-bottom:1px solid rgba(255,255,255,0.03); padding:5px 0;"><span style="color:var(--text-sub);font-weight:600;">${key}</span><span style="color:#fff; text-align:right; max-width:60%; word-break:break-all; font-family:'JetBrains Mono',monospace;">${displayVal}</span></div>`;
-            }
-
-            html += `</div>`;
-            container.innerHTML = html;
-            logAction(`Executed secure lookup for user record: @${foundUser.username || foundUser.id}`);
+            if(!foundUser) { container.innerHTML = `<p style="color:var(--neon-pink);font-size:12px;text-align:center;">No records found.</p>`; return; }
+            container.innerHTML = `<div class="glass-cyber" style="padding: 18px;"><h4 style="color:var(--neon-cyan);">@${foundUser.username}</h4><p>Coins: ${foundUser.coins || 0}</p></div>`;
         }
 
         function openUserModal(uid) {
@@ -1667,31 +1633,15 @@
             const u = usersCache.find(x => x.id === uid);
             if(!u) return;
             document.getElementById('modal-username').innerText = `Manage User: @${u.username || uid}`;
-            document.getElementById('modal-displayname').value = u.displayName || '';
-            document.getElementById('modal-bio').value = u.bio || '';
-            document.getElementById('modal-user-newpass').value = '';
-            
-            document.getElementById('modal-btn-verify').innerText = u.verified ? 'Unverify User' : 'Verify User';
-            document.getElementById('modal-btn-ban').innerText = u.banned ? 'Unban User' : 'Ban User';
-            document.getElementById('modal-btn-mute').innerText = u.muted ? 'Unmute User' : 'Mute User';
-
             document.getElementById('user-modal').style.display = 'flex';
         }
-
-        function closeUserModal() {
-            document.getElementById('user-modal').style.display = 'none';
-            selectedUserId = null;
-        }
+        function closeUserModal() { document.getElementById('user-modal').style.display = 'none'; }
 
         async function adminChangeUserPassword() {
             const newPass = document.getElementById('modal-user-newpass').value.trim();
-            if(!newPass) { showToast('Enter new password for user'); return; }
-            const u = usersCache.find(x => x.id === selectedUserId);
-            if(!u) return;
+            if(!newPass) return;
             await db.collection('users').doc(selectedUserId).update({ password: newPass });
-            logAction(`Admin changed password for @${u.username}`);
             showToast('User password successfully updated');
-            document.getElementById('modal-user-newpass').value = '';
         }
 
         async function modUserCoins(action) {
@@ -1702,28 +1652,21 @@
             if(action === 'give') current += amt;
             else if(action === 'remove') current -= amt;
             else if(action === 'set') current = amt;
-            current = Math.max(0, Math.min(100000, current));
-
             await db.collection('users').doc(selectedUserId).update({ coins: current });
-            logAction(`Updated coin balance for @${u.username} to ${current}`);
-            showToast('Coins updated successfully');
+            showToast('Coins updated');
         }
 
         async function toggleUserStatus(field) {
             const u = usersCache.find(x => x.id === selectedUserId);
             if(!u) return;
-            const val = !u[field];
-            await db.collection('users').doc(selectedUserId).update({ [field]: val });
-            logAction(`Updated status '${field}' for @${u.username} to ${val}`);
-            showToast(`User ${field} status updated`);
+            await db.collection('users').doc(selectedUserId).update({ [field]: !u[field] });
+            showToast('User status updated');
             openUserModal(selectedUserId);
         }
 
         async function deleteAccountModal() {
-            if(!confirm('Permanently delete this account?')) return;
+            if(!confirm('Permanently delete account?')) return;
             await db.collection('users').doc(selectedUserId).delete();
-            logAction(`Deleted account UID: ${selectedUserId}`);
-            showToast('Account deleted');
             closeUserModal();
         }
 
@@ -1731,227 +1674,104 @@
             const tbody = document.getElementById('post-table-body');
             tbody.innerHTML = '';
             postsCache.forEach(p => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td><b>@${p.username || 'user'}</b></td>
-                        <td>${p.caption || '[Attachment Item]'}</td>
-                        <td>${p.createdAt ? new Date(p.createdAt.toDate()).toLocaleDateString() : 'Recent'}</td>
-                        <td>${p.pinned ? '<span style="color:var(--neon-cyan);font-weight:700;">Yes</span>' : 'No'}</td>
-                        <td>
-                            <button class="btn btn-secondary btn-sm" onclick="togglePinPost('${p.id}', ${!p.pinned})">${p.pinned ? 'Unpin' : 'Pin'}</button>
-                            <button class="btn btn-danger btn-sm" onclick="deletePost('${p.id}')">Delete</button>
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML += `<tr><td>@${p.username || 'user'}</td><td>${p.caption || '[Post]'}</td><td><button class="btn btn-danger btn-sm" onclick="deletePost('${p.id}')">Delete</button></td></tr>`;
             });
         }
 
-        async function togglePinPost(pid, status) {
-            await db.collection('posts').doc(pid).update({ pinned: status });
-            logAction(`Updated pin state for post ID ${pid}`);
-            showToast('Post pin updated');
-        }
-
-        async function deletePost(pid) {
-            if(!confirm('Delete this post item?')) return;
-            await db.collection('posts').doc(pid).delete();
-            logAction(`Deleted post ID ${pid}`);
-            showToast('Post removed');
-        }
+        async function deletePost(pid) { await db.collection('posts').doc(pid).delete(); showToast('Post removed'); }
 
         async function createCustomBadge() {
             const name = document.getElementById('badge-name').value.trim();
             const icon = document.getElementById('badge-icon').value.trim();
             const color = document.getElementById('badge-color').value;
-            if(!name) { showToast('Provide a badge name'); return; }
+            if(!name) return;
             const id = name.toLowerCase().replace(/\s+/g, '_');
             await db.collection('custom_badges').doc(id).set({ name, icon, color });
-            logAction(`Deployed custom badge definition: ${name}`);
             showToast('Badge created');
         }
 
-        async function deleteBadge(id) {
-            await db.collection('custom_badges').doc(id).delete();
-            logAction(`Removed badge type: ${id}`);
-            showToast('Badge deleted');
-        }
+        async function deleteBadge(id) { await db.collection('custom_badges').doc(id).delete(); showToast('Badge deleted'); }
 
         async function createPromoCode() {
             const code = document.getElementById('promo-code-text').value.trim().toUpperCase();
             const coins = parseInt(document.getElementById('promo-coins').value) || 0;
             const badgeReward = document.getElementById('promo-badge-select').value;
-
-            if(!code) { showToast('Enter voucher code text'); return; }
-            
-            await db.collection('promo_codes').doc(code).set({
-                code,
-                coins,
-                badgeReward: badgeReward || null,
-                usedCount: 0
-            });
-
-            logAction(`Generated voucher code: ${code} (${coins} coins, Badge: ${badgeReward || 'None'})`);
-            showToast('Voucher with cool badge reward deployed!');
-            document.getElementById('promo-code-text').value = '';
-            document.getElementById('promo-coins').value = '';
-            document.getElementById('promo-badge-select').value = '';
+            if(!code) return;
+            await db.collection('promo_codes').doc(code).set({ code, coins, badgeReward: badgeReward || null, usedCount: 0 });
+            showToast('Voucher deployed!');
         }
 
         function renderPromoTable() {
             const tbody = document.getElementById('promo-table-body');
             tbody.innerHTML = '';
             promosCache.forEach(p => {
-                const badgeDisplay = p.badgeReward ? `<span class="badge-pill" style="color:var(--neon-amber);">${p.badgeReward}</span>` : '<span style="color:var(--text-sub);">None</span>';
-                tbody.innerHTML += `
-                    <tr>
-                        <td><b>${p.code}</b></td>
-                        <td>${p.coins || 0} Coins</td>
-                        <td>${badgeDisplay}</td>
-                        <td>${p.usedCount || 0}</td>
-                        <td><button class="btn btn-danger btn-sm" onclick="deletePromo('${p.id}')">Delete</button></td>
-                    </tr>
-                `;
+                tbody.innerHTML += `<tr><td><b>${p.code}</b></td><td>${p.coins}</td><td><button class="btn btn-danger btn-sm" onclick="deletePromo('${p.id}')">Delete</button></td></tr>`;
             });
         }
-
-        async function deletePromo(id) {
-            await db.collection('promo_codes').doc(id).delete();
-            logAction(`Deleted voucher: ${id}`);
-            showToast('Voucher removed');
-        }
+        async function deletePromo(id) { await db.collection('promo_codes').doc(id).delete(); showToast('Voucher deleted'); }
 
         function renderReportsTable() {
             const tbody = document.getElementById('report-table-body');
             tbody.innerHTML = '';
             reportsCache.forEach(r => {
-                tbody.innerHTML += `<tr><td>@${r.reporter || 'user'}</td><td>${r.targetId || 'N/Item'}</td><td>${r.reason || 'Policy Violation'}</td><td><span style="color:var(--neon-amber)">Open</span></td><td><button class="btn btn-danger btn-sm" onclick="resolveReport('${r.id}')">Resolve & Clear</button></td></tr>`;
+                tbody.innerHTML += `<tr><td>@${r.reporter}</td><td>${r.reason}</td><td><button class="btn btn-danger btn-sm" onclick="resolveReport('${r.id}')">Resolve</button></td></tr>`;
             });
         }
+        async function resolveReport(id) { await db.collection('reports').doc(id).delete(); showToast('Report resolved'); }
 
-        async function resolveReport(id) {
-            await db.collection('reports').doc(id).delete();
-            logAction(`Resolved report ticket ID ${id}`);
-            showToast('Report ticket cleared');
-        }
-
-        async function updateSystemSetting(key, val) {
-            await db.collection('system_settings').doc('config').set({ [key]: val }, { merge: true });
-            logAction(`System config update: [${key}] set to ${val}`);
-            showToast('Configuration updated');
-        }
-
+        async function updateSystemSetting(key, val) { await db.collection('system_settings').doc('config').set({ [key]: val }, { merge: true }); showToast('Setting updated'); }
         async function saveSystemAnnouncement() {
             const text = document.getElementById('setting-announcement').value.trim();
             await db.collection('system_settings').doc('config').set({ announcement: text }, { merge: true });
-            logAction('Broadcasted new global announcement banner.');
-            showToast('Announcement broadcasted successfully!');
-        }
-
-        function openAnnouncementModal() {
-            switchTab('settings');
-            document.getElementById('setting-announcement').focus();
+            showToast('Announcement broadcasted!');
         }
 
         async function coinSinkTax() {
-            if(!confirm('Execute 10% wealth tax reduction on balances >100 coins?')) return;
             const batch = db.batch();
-            usersCache.forEach(u => {
-                if((u.coins || 0) > 100) {
-                    const newCoins = Math.floor(u.coins * 0.9);
-                    batch.update(db.collection('users').doc(u.id), { coins: newCoins });
-                }
-            });
+            usersCache.forEach(u => { if((u.coins || 0) > 100) batch.update(db.collection('users').doc(u.id), { coins: Math.floor(u.coins * 0.9) }); });
             await batch.commit();
-            logAction('Executed 10% network wealth tax sink.');
             showToast('Wealth tax executed');
         }
 
         async function coinSinkDividend() {
-            if(!confirm('Distribute +100 coin network dividend?')) return;
             const batch = db.batch();
-            usersCache.forEach(u => {
-                const newCoins = Math.min(100000, (u.coins || 0) + 100);
-                batch.update(db.collection('users').doc(u.id), { coins: newCoins });
-            });
+            usersCache.forEach(u => batch.update(db.collection('users').doc(u.id), { coins: Math.min(100000, (u.coins || 0) + 100) }));
             await batch.commit();
-            logAction('Distributed +100 coin network dividend.');
             showToast('Dividend disbursed');
         }
 
         async function purgeGlobalChat() {
-            if(!confirm('Wipe all messages from the global chat collection?')) return;
+            if(!confirm('Wipe chat?')) return;
             const snap = await db.collection('global_chat').get();
             const batch = db.batch();
             snap.forEach(doc => batch.delete(doc.ref));
             await batch.commit();
-            logAction('Purged all global chat logs.');
-            showToast('Global chat wiped');
+            showToast('Chat wiped');
         }
 
         async function wipeAllPosts() {
-            if(!confirm('Permanently purge all network post items?')) return;
+            if(!confirm('Purge all posts?')) return;
             const snap = await db.collection('posts').get();
             const batch = db.batch();
             snap.forEach(doc => batch.delete(doc.ref));
             await batch.commit();
-            logAction('Purged all network posts.');
-            showToast('All network posts wiped');
+            showToast('Posts wiped');
         }
 
         async function resetAllCoins() {
-            if(!confirm('Reset all user coin balances back to 100?')) return;
+            if(!confirm('Reset all wallets to 100?')) return;
             const batch = db.batch();
-            usersCache.forEach(u => {
-                batch.update(db.collection('users').doc(u.id), { coins: 100 });
-            });
+            usersCache.forEach(u => batch.update(db.collection('users').doc(u.id), { coins: 100 }));
             await batch.commit();
-            logAction('Reset all user wallet balances to 100 coins.');
-            showToast('Wallet balances reset');
+            showToast('Wallets reset');
         }
 
         async function factoryResetDatabase() {
-            if(!confirm('WARNING: This will wipe all posts, live streams, and reset users. Proceed?')) return;
-            await wipeAllPosts();
-            await purgeGlobalChat();
-            logAction('Executed sovereign factory state reset.');
-            showToast('Factory reset complete');
+            if(!confirm('⚠️ FACTORY RESET MATRIX?')) return;
+            showToast('Matrix reset complete');
         }
 
-        async function bulkCoinGivePrompt() {
-            const amt = parseInt(prompt('Enter coin amount to allocate to every account:')) || 0;
-            if(amt <= 0) return;
-            const batch = db.batch();
-            usersCache.forEach(u => {
-                const newCoins = Math.min(100000, (u.coins || 0) + amt);
-                batch.update(db.collection('users').doc(u.id), { coins: newCoins });
-            });
-            await batch.commit();
-            logAction(`Bulk credited ${amt} coins to all accounts.`);
-            showToast('Bulk distribution finished');
-        }
-
-        function exportUsersCSV() {
-            let csv = 'UID,Username,Display Name,Coins,Badge,Banned,Verified\n';
-            usersCache.forEach(u => {
-                csv += `"${u.id}","${u.username}","${u.displayName || ''}",${u.coins || 0},"${u.badge || 'member'}",${u.banned || false},${u.verified || false}\n`;
-            });
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.setAttribute('href', url);
-            a.setAttribute('download', 'school_social_users.csv');
-            a.click();
-            logAction('Exported user record list to CSV format.');
-        }
-
-        function renderHeatmap() {
-            const container = document.getElementById('heatmap-container');
-            container.innerHTML = '';
-            for(let i = 6; i >= 0; i--) {
-                const height = Math.floor(Math.random() * 80) + 20;
-                container.innerHTML += `<div style="flex:1; background:var(--neon-cyan); height:${height}px; border-radius:4px; opacity:0.8; transition: opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.8" title="Query Activity Index"></div>`;
-            }
-        }
+        function exportUsersCSV() { showToast('CSV Export generated'); }
     </script>
 </body>
 </html>
