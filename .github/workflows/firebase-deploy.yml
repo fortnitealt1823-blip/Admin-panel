@@ -13,4 +13,5 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ADMIN_PANEL1232 }}'
           channelId: live
-          projectId: engeenering-project
+          projectId: admin-panel
+  
